@@ -26,21 +26,21 @@ This is not just a collection of SQL queries. It is a structured portfolio proje
 
 ---
 
-## Key Features
+## ⭐ Key Features
 
-* Built a complete PostgreSQL database for banking analytics
-* Imported raw banking data from CSV into PostgreSQL
-* Cleaned missing, inconsistent, and invalid data
-* Validated data quality across customer, account, transaction, loan, risk, and maturity fields
-* Detected and removed duplicate records using SQL logic
-* Created reusable reporting views for business analysis
-* Developed 20 business-focused SQL analysis queries
-* Generated key banking KPIs and executive insights
-* Created indexes to improve query performance
-* Used `EXPLAIN` and `EXPLAIN ANALYZE` for query performance analysis
-* Built reusable PostgreSQL functions for reporting
-* Organized SQL scripts into separate project files
-* Prepared the project for future dashboard and documentation expansion
+* 🏦 End-to-End Banking Data Analytics Project
+* 🗄️ PostgreSQL Database Design & Development
+* 📥 CSV Data Import into PostgreSQL
+* 🧹 Data Cleaning & Standardization
+* ✔️ Data Validation & Quality Checks
+* 🔍 Duplicate Detection & Removal
+* 📊 20 Business-Focused SQL Analysis Queries
+* 📈 Reusable SQL Reporting Views
+* ⚡ Query Performance Optimization
+* 🚀 Index Creation for Faster Query Execution
+* ⚙️ Reusable PostgreSQL Functions
+* 📚 Professional Project Documentation
+* 🌐 GitHub Portfolio Ready
 
 ---
 
@@ -802,10 +802,11 @@ Install the following tools before running the project:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/Banking_Data_Analytics_SQL_Project.git
+git clone
+https://github.com/faisalk8911/banking-data-analytics-postgresql.git
 ```
 
-Replace `YOUR_GITHUB_USERNAME` with the final GitHub username after publishing the repository.
+
 
 ### Run the SQL Scripts
 
@@ -875,7 +876,7 @@ This project is licensed under the MIT License.
 **Faisal Kader**
 SQL Developer | Data Analytics Enthusiast | PostgreSQL | Business Intelligence
 
-GitHub: `https://github.com/YOUR_GITHUB_USERNAME`
+GitHub: `https://github.com/faisalk8911`
 
 ---
 
