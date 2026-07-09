@@ -1,0 +1,101 @@
+client_id,id_missing,client_name,bank_name,account_type,currency,transaction_amount,risk_category,interest_rate,interest_classification,maturity_date,maturity_status,email,email_check,phone,loan_status,remarks
+96487,No,John Capital,HSBC,Investment,USD,58785,Low,null,Unknown,5/1/2026,Expired,Invalid Email,Invalid,Unknown,Pending,No Remarks
+67242,No,John Capital,BOFA,Investment,Unknown,490862,High,3.54,Low,6/14/2024,Expired,Invalid Email,Invalid,1712345678,Approved,Follow Up
+null,Yes,Beta Funds,HSBC,Current,USD,179455,Medium,1.66,Low,10/5/2024,Expired,Unknown,Missing,1712345678,Pending,High Risk
+36681,No,Alpha Holdings,Wells Fargo,Investment,EUR,275437,Medium,null,Unknown,null,Unknown,Invalid Email,Invalid,1712345678,Approved,High Risk
+23890,No,Unknown Client,Unknown Bank,Current,EUR,null,Unknown,null,Unknown,8/28/2024,Expired,client@mail.com,Valid,1712345678,Pending,No Remarks
+null,Yes,John Capital,CHASE,Loan,EUR,266889,Medium,null,Unknown,6/8/2024,Expired,Unknown,Missing,1712345678,Unknown,No Remarks
+43408,No,Mary Invest,Unknown Bank,Loan,Unknown,434094,High,null,Unknown,11/4/2025,Expired,client@bank.com,Valid,1712345678,Pending,No Remarks
+12026,No,Beta Funds,CITI,Investment,USD,323957,High,1.87,Low,null,Unknown,client@mail.com,Valid,1712345678,Rejected,No Remarks
+55089,No,Alpha Holdings,CITI,Current,GBP,437786,High,null,Unknown,8/24/2024,Expired,Invalid Email,Invalid,Unknown,Unknown,High Risk
+69709,No,Mary Invest,CHASE,Savings,Unknown,null,Unknown,null,Unknown,8/10/2024,Expired,Invalid Email,Invalid,1712345678,Rejected,Good Payer
+null,Yes,Unknown Client,Wells Fargo,Loan,USD,67678,Low,7.63,Medium,1/28/2026,Expired,Unknown,Missing,1712345678,Unknown,Good Payer
+null,Yes,Alpha Holdings,Unknown Bank,Current,GBP,57950,Low,11.64,High,5/2/2024,Expired,Invalid Email,Invalid,Unknown,Approved,High Risk
+null,Yes,John Capital,CITI,Current,USD,435574,High,8.58,Medium,4/21/2025,Expired,Unknown,Missing,Unknown,Pending,High Risk
+35167,No,Alpha Holdings,BOFA,Loan,Unknown,null,Unknown,5,Medium,12/4/2025,Expired,Unknown,Missing,1712345678,Rejected,Good Payer
+null,Yes,Alpha Holdings,HSBC,Current,BDT,201804,Medium,null,Unknown,null,Unknown,client@mail.com,Valid,1712345678,Approved,High Risk
+87831,No,Beta Funds,Wells Fargo,Savings,EUR,29057,Low,10.65,High,5/15/2024,Expired,client@mail.com,Valid,1712345678,Pending,Follow Up
+null,Yes,Mary Invest,BOFA,Investment,BDT,12704,Low,2.97,Low,5/19/2024,Expired,client@bank.com,Valid,1712345678,Pending,Follow Up
+null,Yes,Unknown Client,HSBC,Loan,BDT,null,Unknown,11.84,High,null,Unknown,client@bank.com,Valid,Unknown,Approved,Good Payer
+31734,No,John Capital,Unknown Bank,Investment,EUR,143025,Medium,4.14,Low,null,Unknown,Invalid Email,Invalid,1712345678,Rejected,Good Payer
+null,Yes,Alpha Holdings,BOFA,Current,Unknown,275930,Medium,5.91,Medium,5/9/2024,Expired,client@bank.com,Valid,1712345678,Pending,Good Payer
+null,Yes,Alpha Holdings,Wells Fargo,Savings,GBP,null,Unknown,null,Unknown,6/17/2024,Expired,client@bank.com,Valid,1712345678,Approved,High Risk
+null,Yes,John Capital,BOFA,Loan,BDT,259797,Medium,7.16,Medium,4/3/2025,Expired,Invalid Email,Invalid,1712345678,Approved,High Risk
+97648,No,Unknown Client,HSBC,Investment,USD,334498,High,null,Unknown,7/23/2024,Expired,client@mail.com,Valid,Unknown,Unknown,Follow Up
+49759,No,Mary Invest,Unknown Bank,Loan,EUR,null,Unknown,4.39,Low,5/6/2026,Expired,client@bank.com,Valid,1712345678,Unknown,High Risk
+96529,No,Mary Invest,HSBC,Investment,USD,371184,High,4.45,Low,6/1/2024,Expired,client@bank.com,Valid,1712345678,Pending,No Remarks
+null,Yes,Unknown Client,CITI,Loan,Unknown,437029,High,null,Unknown,3/20/2024,Expired,client@bank.com,Valid,1712345678,Unknown,High Risk
+null,Yes,Beta Funds,HSBC,Loan,USD,305234,High,3.41,Low,null,Unknown,client@bank.com,Valid,1712345678,Approved,Good Payer
+15833,No,Mary Invest,Unknown Bank,Current,BDT,81859,Low,null,Unknown,12/20/2025,Expired,client@bank.com,Valid,1712345678,Unknown,Follow Up
+null,Yes,Alpha Holdings,BOFA,Current,Unknown,360934,High,null,Unknown,10/19/2025,Expired,Invalid Email,Invalid,Unknown,Rejected,Follow Up
+94578,No,Unknown Client,HSBC,Investment,BDT,null,Unknown,11.1,High,1/12/2025,Expired,Invalid Email,Invalid,1712345678,Rejected,Follow Up
+null,Yes,John Capital,CITI,Savings,EUR,376065,High,null,Unknown,10/27/2024,Expired,client@bank.com,Valid,1712345678,Pending,Follow Up
+null,Yes,Unknown Client,CITI,Loan,USD,187104,Medium,null,Unknown,2/21/2025,Expired,client@mail.com,Valid,1712345678,Rejected,No Remarks
+null,Yes,Unknown Client,HSBC,Savings,GBP,196714,Medium,null,Unknown,6/12/2025,Expired,Unknown,Missing,1712345678,Rejected,Follow Up
+null,Yes,Unknown Client,Unknown Bank,Savings,EUR,146569,Medium,10.24,High,9/5/2024,Expired,Unknown,Missing,1712345678,Unknown,High Risk
+63760,No,Mary Invest,Wells Fargo,Investment,USD,null,Unknown,null,Unknown,8/21/2024,Expired,client@bank.com,Valid,1712345678,Rejected,Good Payer
+23465,No,John Capital,CITI,Savings,EUR,null,Unknown,null,Unknown,1/14/2025,Expired,Invalid Email,Invalid,1712345678,Approved,High Risk
+null,Yes,Mary Invest,Wells Fargo,Current,USD,null,Unknown,null,Unknown,3/12/2026,Expired,client@bank.com,Valid,1712345678,Rejected,Follow Up
+null,Yes,Mary Invest,Unknown Bank,Investment,GBP,121940,Medium,null,Unknown,8/17/2024,Expired,client@bank.com,Valid,1712345678,Unknown,High Risk
+28123,No,Unknown Client,BOFA,Savings,USD,179553,Medium,7.08,Medium,null,Unknown,Unknown,Missing,1712345678,Rejected,No Remarks
+83588,No,Beta Funds,CHASE,Investment,EUR,478647,High,null,Unknown,2/10/2025,Expired,Unknown,Missing,Unknown,Approved,High Risk
+null,Yes,Alpha Holdings,Wells Fargo,Current,Unknown,154849,Medium,null,Unknown,null,Unknown,Invalid Email,Invalid,1712345678,Unknown,Good Payer
+null,Yes,Unknown Client,Wells Fargo,Savings,USD,471384,High,10.6,High,null,Unknown,Invalid Email,Invalid,1712345678,Approved,Follow Up
+null,Yes,John Capital,Wells Fargo,Loan,USD,null,Unknown,5.19,Medium,7/5/2025,Expired,client@bank.com,Valid,1712345678,Rejected,No Remarks
+null,Yes,Alpha Holdings,CITI,Loan,BDT,null,Unknown,7.16,Medium,null,Unknown,Unknown,Missing,1712345678,Approved,Follow Up
+27033,No,Beta Funds,CITI,Savings,Unknown,42789,Low,null,Unknown,null,Unknown,client@mail.com,Valid,1712345678,Pending,Good Payer
+null,Yes,Alpha Holdings,HSBC,Investment,USD,160650,Medium,9.47,Medium,1/26/2026,Expired,Invalid Email,Invalid,1712345678,Pending,High Risk
+null,Yes,Unknown Client,BOFA,Current,GBP,null,Unknown,null,Unknown,11/29/2025,Expired,Unknown,Missing,1712345678,Unknown,High Risk
+91701,No,Mary Invest,HSBC,Savings,BDT,48154,Low,8.13,Medium,2/25/2025,Expired,Invalid Email,Invalid,1712345678,Rejected,High Risk
+null,Yes,Unknown Client,CITI,Current,Unknown,196913,Medium,9.83,Medium,1/12/2026,Expired,Unknown,Missing,1712345678,Approved,No Remarks
+18942,No,Beta Funds,BOFA,Savings,EUR,223045,Medium,null,Unknown,1/2/2024,Expired,client@mail.com,Valid,Unknown,Rejected,No Remarks
+null,Yes,Unknown Client,HSBC,Investment,BDT,460491,High,1.63,Low,6/14/2025,Expired,Invalid Email,Invalid,1712345678,Unknown,No Remarks
+34696,No,Beta Funds,BOFA,Investment,Unknown,null,Unknown,null,Unknown,null,Unknown,client@bank.com,Valid,Unknown,Rejected,Follow Up
+36377,No,Beta Funds,BOFA,Current,Unknown,224924,Medium,null,Unknown,1/12/2024,Expired,client@bank.com,Valid,Unknown,Rejected,Follow Up
+52418,No,Beta Funds,CITI,Savings,GBP,417526,High,2.22,Low,null,Unknown,Unknown,Missing,1712345678,Rejected,Good Payer
+80066,No,Alpha Holdings,CITI,Investment,EUR,null,Unknown,4.69,Low,10/31/2025,Expired,Invalid Email,Invalid,1712345678,Rejected,High Risk
+null,Yes,John Capital,CITI,Savings,Unknown,98793,Low,null,Unknown,5/25/2026,Expired,client@bank.com,Valid,1712345678,Approved,No Remarks
+null,Yes,Mary Invest,Unknown Bank,Investment,USD,254032,Medium,null,Unknown,4/29/2026,Expired,client@bank.com,Valid,1712345678,Approved,Follow Up
+82746,No,Alpha Holdings,HSBC,Current,USD,70815,Low,null,Unknown,1/30/2024,Expired,Invalid Email,Invalid,Unknown,Unknown,Follow Up
+35591,No,Alpha Holdings,HSBC,Savings,GBP,null,Unknown,8.38,Medium,12/8/2025,Expired,Unknown,Missing,1712345678,Rejected,Follow Up
+null,Yes,Mary Invest,HSBC,Loan,EUR,135111,Medium,8.26,Medium,12/9/2025,Expired,client@mail.com,Valid,Unknown,Approved,Good Payer
+null,Yes,Alpha Holdings,Unknown Bank,Savings,BDT,226313,Medium,7.61,Medium,null,Unknown,client@bank.com,Valid,Unknown,Approved,Good Payer
+25684,No,John Capital,BOFA,Savings,Unknown,null,Unknown,3.32,Low,1/30/2024,Expired,Invalid Email,Invalid,1712345678,Pending,Good Payer
+null,Yes,John Capital,HSBC,Investment,BDT,null,Unknown,null,Unknown,2/3/2024,Expired,Invalid Email,Invalid,1712345678,Approved,Follow Up
+null,Yes,Unknown Client,CITI,Investment,USD,null,Unknown,3.11,Low,null,Unknown,Invalid Email,Invalid,1712345678,Pending,High Risk
+null,Yes,Unknown Client,CITI,Savings,BDT,133578,Medium,3.16,Low,3/11/2024,Expired,Invalid Email,Invalid,1712345678,Rejected,High Risk
+null,Yes,Alpha Holdings,Unknown Bank,Loan,BDT,215328,Medium,null,Unknown,null,Unknown,client@mail.com,Valid,1712345678,Unknown,High Risk
+null,Yes,Alpha Holdings,Wells Fargo,Current,EUR,147537,Medium,null,Unknown,null,Unknown,client@bank.com,Valid,1712345678,Rejected,Good Payer
+null,Yes,Alpha Holdings,HSBC,Investment,USD,365493,High,7.05,Medium,2/18/2026,Expired,Invalid Email,Invalid,1712345678,Unknown,Good Payer
+null,Yes,John Capital,BOFA,Current,GBP,167155,Medium,null,Unknown,7/5/2024,Expired,Invalid Email,Invalid,1712345678,Unknown,High Risk
+61364,No,Beta Funds,HSBC,Current,GBP,null,Unknown,9.03,Medium,4/26/2024,Expired,client@bank.com,Valid,1712345678,Approved,Follow Up
+null,Yes,Unknown Client,BOFA,Investment,BDT,382617,High,10.78,High,9/6/2024,Expired,client@mail.com,Valid,Unknown,Rejected,No Remarks
+38679,No,Beta Funds,CITI,Loan,Unknown,381419,High,null,Unknown,5/4/2024,Expired,Invalid Email,Invalid,1712345678,Pending,Good Payer
+31770,No,Mary Invest,CHASE,Savings,EUR,139771,Medium,11.67,High,2/23/2025,Expired,client@bank.com,Valid,1712345678,Rejected,Follow Up
+50725,No,Unknown Client,CHASE,Current,GBP,null,Unknown,12.1,High,5/12/2024,Expired,Unknown,Missing,Unknown,Rejected,Follow Up
+null,Yes,Beta Funds,Unknown Bank,Investment,GBP,485619,High,4.6,Low,3/20/2026,Expired,Invalid Email,Invalid,1712345678,Unknown,Follow Up
+null,Yes,Mary Invest,Wells Fargo,Loan,Unknown,321431,High,null,Unknown,10/3/2024,Expired,Unknown,Missing,1712345678,Pending,Good Payer
+null,Yes,John Capital,BOFA,Loan,BDT,null,Unknown,10.19,High,6/2/2026,Expired,Unknown,Missing,1712345678,Approved,High Risk
+22358,No,John Capital,Wells Fargo,Investment,BDT,390079,High,null,Unknown,null,Unknown,client@mail.com,Valid,1712345678,Approved,High Risk
+47113,No,John Capital,HSBC,Loan,EUR,null,Unknown,null,Unknown,null,Unknown,client@mail.com,Valid,1712345678,Unknown,High Risk
+63510,No,Unknown Client,Wells Fargo,Savings,EUR,342081,High,null,Unknown,1/8/2025,Expired,Invalid Email,Invalid,1712345678,Approved,Follow Up
+null,Yes,Alpha Holdings,CITI,Loan,USD,null,Unknown,null,Unknown,9/18/2024,Expired,client@bank.com,Valid,1712345678,Rejected,Good Payer
+null,Yes,Alpha Holdings,Unknown Bank,Savings,Unknown,328759,High,null,Unknown,10/4/2024,Expired,Unknown,Missing,1712345678,Unknown,No Remarks
+null,Yes,Unknown Client,Wells Fargo,Current,BDT,486774,High,null,Unknown,8/5/2025,Expired,Invalid Email,Invalid,1712345678,Unknown,No Remarks
+52225,No,Alpha Holdings,Wells Fargo,Current,BDT,295640,Medium,null,Unknown,4/19/2024,Expired,client@bank.com,Valid,Unknown,Unknown,No Remarks
+32611,No,Beta Funds,CHASE,Current,EUR,null,Unknown,null,Unknown,4/22/2026,Expired,Unknown,Missing,Unknown,Pending,Follow Up
+86236,No,Beta Funds,CITI,Investment,Unknown,20182,Low,null,Unknown,9/26/2024,Expired,Unknown,Missing,1712345678,Pending,Good Payer
+null,Yes,Beta Funds,Unknown Bank,Current,GBP,140693,Medium,7.89,Medium,10/22/2024,Expired,client@mail.com,Valid,1712345678,Pending,Good Payer
+62524,No,Alpha Holdings,Unknown Bank,Loan,GBP,null,Unknown,null,Unknown,7/4/2024,Expired,Invalid Email,Invalid,1712345678,Rejected,High Risk
+82234,No,Beta Funds,CITI,Investment,USD,null,Unknown,null,Unknown,9/29/2025,Expired,client@mail.com,Valid,Unknown,Approved,Good Payer
+null,Yes,Unknown Client,Wells Fargo,Loan,GBP,null,Unknown,11.22,High,3/23/2026,Expired,Unknown,Missing,1712345678,Pending,High Risk
+22853,No,John Capital,Unknown Bank,Savings,EUR,23168,Low,null,Unknown,7/17/2025,Expired,Invalid Email,Invalid,1712345678,Approved,Good Payer
+null,Yes,Mary Invest,HSBC,Savings,BDT,396093,High,null,Unknown,null,Unknown,client@bank.com,Valid,1712345678,Unknown,Good Payer
+67037,No,Beta Funds,Unknown Bank,Current,Unknown,152234,Medium,6.4,Medium,5/4/2026,Expired,Unknown,Missing,Unknown,Approved,Good Payer
+null,Yes,Beta Funds,Unknown Bank,Investment,GBP,393266,High,5.52,Medium,null,Unknown,Unknown,Missing,1712345678,Approved,No Remarks
+null,Yes,Mary Invest,BOFA,Savings,Unknown,87927,Low,null,Unknown,null,Unknown,Unknown,Missing,1712345678,Rejected,Follow Up
+43521,No,Mary Invest,HSBC,Investment,Unknown,344969,High,null,Unknown,10/8/2025,Expired,client@bank.com,Valid,1712345678,Unknown,High Risk
+44254,No,Alpha Holdings,CITI,Savings,USD,124010,Medium,3.89,Low,null,Unknown,client@bank.com,Valid,Unknown,Unknown,Good Payer
+45649,No,Unknown Client,BOFA,Loan,USD,464934,High,9.33,Medium,12/21/2025,Expired,client@bank.com,Valid,1712345678,Approved,Follow Up
+null,Yes,John Capital,Unknown Bank,Current,EUR,null,Unknown,null,Unknown,10/16/2025,Expired,Unknown,Missing,1712345678,Pending,No Remarks
+null,Yes,Unknown Client,CHASE,Loan,Unknown,214530,Medium,8.28,Medium,7/18/2024,Expired,Unknown,Missing,Unknown,Rejected,No Remarks
