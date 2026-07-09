@@ -44,24 +44,22 @@ This is not just a collection of SQL queries. It is a structured portfolio proje
 
 ---
 
-## Business Problem
 
-Banks and financial institutions generate large amounts of customer, account, loan, and transaction data every day. However, raw financial data is often messy, duplicated, incomplete, and inconsistent.
+## 💼 Business Problem
 
-Common data issues include:
+Banks generate large volumes of transactional data every day. However, raw operational data is often incomplete, inconsistent, and duplicated, making it difficult to produce accurate business reports and reliable insights.
 
-* Missing customer information
-* Duplicate transaction records
-* Inconsistent bank names
-* Invalid or missing contact details
-* Unknown risk categories
-* Missing loan statuses
-* Unstandardized account types
-* Inconsistent maturity information
+Business users require clean, validated, and structured data to support:
 
-These problems can negatively affect business reporting, customer segmentation, risk analysis, loan monitoring, transaction summaries, and executive decision-making.
+* Customer performance reporting
+* Transaction monitoring
+* Risk assessment
+* Loan portfolio analysis
+* Executive decision-making
+* Regulatory and compliance reporting
 
-This project solves the problem by building a PostgreSQL-based analytics workflow that cleans, validates, organizes, and analyzes banking data so it can be used for accurate reporting and business intelligence.
+This project demonstrates how PostgreSQL can be used to transform raw banking data into a clean, analysis-ready database through data cleaning, validation, duplicate removal, performance optimization, and business-focused SQL reporting.
+
 
 ---
 
