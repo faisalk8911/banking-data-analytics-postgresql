@@ -1,15 +1,15 @@
 # End-to-End Banking Data Analytics with PostgreSQL
-
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:203A43,100:2C5364&height=220&section=header&text=Banking%20Data%20Analytics&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=End-to-End%20SQL%20Analytics%20Project%20using%20PostgreSQL&descAlignY=58&descSize=18" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0B1F33,50:1F4E79,100:2E86C1&height=240&section=header&text=End-to-End%20Banking%20Data%20Analytics&fontSize=40&fontColor=ffffff&fontAlignY=35&animation=fadeIn&desc=PostgreSQL%20%7C%20Data%20Cleaning%20%7C%20SQL%20Analytics%20%7C%20Business%20Reporting%20%7C%20Performance%20Optimization&descAlignY=58&descSize=18" />
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/SQL-Advanced-blue" />
-  <img src="https://img.shields.io/badge/Data%20Analytics-Banking-orange" />
-  <img src="https://img.shields.io/badge/Project-Completed-success" />
-  <img src="https://img.shields.io/badge/License-MIT-green" />
+  <img src="https://img.shields.io/badge/SQL-Advanced-007ACC" />
+  <img src="https://img.shields.io/badge/Data%20Analytics-Banking-F39C12" />
+  <img src="https://img.shields.io/badge/Status-Completed-28A745" />
+  <img src="https://img.shields.io/badge/Documentation-Professional-6F42C1" />
+  <img src="https://img.shields.io/badge/License-MIT-2ECC71" />
 </p>
 
 ---
