@@ -14,8 +14,6 @@
 
 ---
 
----
-
 ## Project Overview
 
 This project demonstrates a complete end-to-end banking data analytics workflow using PostgreSQL.
