@@ -137,10 +137,7 @@ Banking_Data_Analytics_SQL_Project/
 │
 ├── data/
 │   ├── raw/
-│   │   └── banking_data_raw.csv
-│   │
 │   └── cleaned/
-│       └── banking_data_cleaned.csv
 │
 ├── sql/
 │   ├── 01_database_setup.sql
@@ -153,20 +150,24 @@ Banking_Data_Analytics_SQL_Project/
 │   ├── 08_analysis_queries.sql
 │   ├── 09_indexes.sql
 │   ├── 10_performance_optimization.sql
-│   └── 11_stored_procedures.sql
+│   └── 11_postgresql_functions.sql
 │
 ├── docs/
-│   ├── data_dictionary.md
-│   ├── data_cleaning_report.md
-│   ├── query_results.md
-│   ├── performance_optimization_report.md
-│   └── project_summary.md
+│   ├── 01_Project_Documentation.md
+│   ├── 02_Data_Dictionary.md
+│   ├── 03_Data_Cleaning_Report.md
+│   ├── 04_SQL_Query_Results.md
+│   ├── 05_Project_Summary.md
+│   ├── 06_Performance_Optimization_Report.md
+│   └── CHANGELOG.md
+│
+├── reports/
 │
 ├── images/
 │
-├── README.md
 ├── LICENSE
-└── .gitignore
+├── .gitignore
+└── README.md
 ```
 
 ---
