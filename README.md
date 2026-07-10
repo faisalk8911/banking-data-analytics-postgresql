@@ -135,9 +135,16 @@ The dataset includes the following banking domains:
 ```text
 Banking_Data_Analytics_SQL_Project/
 │
+├── README.md
+├── LICENSE
+├── .gitignore
+│
 ├── data/
 │   ├── raw/
+│   │   └── banking_data_raw.csv
+│   │
 │   └── cleaned/
+│       └── banking_data_cleaned.csv
 │
 ├── sql/
 │   ├── 01_database_setup.sql
@@ -162,13 +169,37 @@ Banking_Data_Analytics_SQL_Project/
 │   └── CHANGELOG.md
 │
 ├── reports/
+│   ├── 01_Executive_Report.md
+│   ├── 02_Data_Quality_Report.md
+│   ├── 03_Customer_Analysis_Report.md
+│   ├── 04_Bank_Performance_Report.md
+│   ├── 05_Risk_Analysis_Report.md
+│   ├── 06_Loan_Status_Report.md
+│   └── 07_Performance_Optimization_Report.md
 │
 ├── images/
+│   ├── project-banner.png
+│   ├── workflow-diagram.png
+│   ├── database-architecture.png
+│   ├── repository-structure.png
+│   ├── performance-analysis.png
+│   ├── pgadmin/
+│   │   ├── database.png
+│   │   ├── table.png
+│   │   ├── indexes.png
+│   │   └── explain-analyze.png
+│   │
+│   └── query-results/
+│       ├── query01.png
+│       ├── query02.png
+│       ├── query03.png
+│       ├── ...
+│       └── query20.png
 │
-├── LICENSE
-├── .gitignore
-└── README.md
-```
+└── assets/
+    ├── project-logo.png
+    ├── github-social-preview.png
+    └── icons/
 
 ---
 
