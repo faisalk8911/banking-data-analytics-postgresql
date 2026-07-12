@@ -8,7 +8,6 @@
   <img src="https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql&logoColor=white" />
   <img src="https://img.shields.io/badge/SQL-Advanced-blue" />
   <img src="https://img.shields.io/badge/Data%20Analytics-Banking-orange" />
-  <img src="https://img.shields.io/badge/License-MIT-green" />
 </p>
 
 ---
