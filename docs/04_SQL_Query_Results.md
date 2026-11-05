@@ -1,136 +1,114 @@
-# SQL Query Results
-## End-to-End Banking Data Analytics using PostgreSQL
 
-**Version:** 1.0.0
+# SQL Business Analysis and Query Results
 
----
-
-# Overview
-
-This document summarizes the business analysis performed using SQL queries on the cleaned banking dataset.
-
-The objective of these queries is to transform raw transactional data into actionable business insights that support reporting and decision-making.
+**Project:** End-to-End Banking Data Analytics with PostgreSQL  
+**Author:** Faisal Kader  
+**Database:** banking_analytics  
+**Source Table:** banking_transactions_clean_v2
 
 ---
 
-# Dataset Summary
+## 1. Executive Summary
 
-| Metric | Value |
-|---------|-------:|
-| Total Records | 24,997 |
-| Unique Clients | 11,676 |
-| Total Transaction Amount | 4,170,755,712.00 |
-| Average Transaction | 250,300.41 |
+This document summarizes 20 business-focused PostgreSQL analysis queries developed for a simulated banking dataset.
 
----
+The queries cover data quality, customer identification, bank performance, account portfolios, interest rates, loan statuses, currencies, maturity dates, and executive reporting.
 
-# Query 1 — Total Records
+The final cleaned dataset contains 24,998 records after removing 502 duplicate rows.
 
-### Business Question
+Only previously verified numerical results are presented. Other analyses are documented with their business purpose and SQL reporting methodology.
 
-How many records exist after data cleaning?
+## 2. Verified Dataset Summary
 
-### Result
+| Metric | Result |
+|---|---:|
+| Original records | 25,500 |
+| Final cleaned records | 24,998 |
+| Duplicate rows removed | 502 |
+| Unique identified clients | 11,676 |
+| Valid transaction amounts | 16,663 |
+| Missing transaction amounts | 8,335 |
+| Sum of recorded amounts | 4,170,755,712.00 |
+| Average recorded amount | 250,300.41 |
+| Average interest rate | 6.99% |
 
-**24,997 records**
-
-### Business Insight
-
-The cleaned dataset contains 24,997 valid records available for analysis.
-
----
-
-# Query 2 — Unique Customers
-
-### Business Question
-
-How many unique customers are in the dataset?
-
-### Result
-
-**11,676 customers**
-
-### Business Insight
-
-The customer base consists of 11,676 unique clients, enabling customer-level reporting and segmentation.
+**Currency limitation:** Financial amounts include multiple currencies without foreign-exchange conversion. Combined totals are SQL consistency metrics, not single-currency financial totals.
 
 ---
 
-# Query 3 — Total Transaction Amount
+## 3. SQL Query Analysis
 
-### Business Question
+### Query 01 — Total Cleaned Records
 
-What is the total transaction value?
+**Business Question:** How many records remain after duplicate removal?
 
-### Result
+**Verified Result:** 24,998 records.
 
-**4,170,755,712.00**
+### Query 02 — Unique Identified Clients
 
-### Business Insight
+**Business Question:** How many distinct non-empty client identifiers exist?
 
-The dataset represents over **4.17 billion** in banking transactions.
+**Verified Result:** 11,676 identified clients.
 
----
+This excludes records without client IDs.
 
-# Query 4 — Average Transaction Amount
+### Query 03 — Transaction Amount Completeness
 
-### Business Question
+**Business Question:** How complete is the financial amount data?
 
-What is the average transaction value?
+| Metric | Result |
+|---|---:|
+| Total records | 24,998 |
+| Valid amounts | 16,663 |
+| Missing amounts | 8,335 |
 
-### Result
+Missing financial values are retained as NULL.
 
-**250,300.41**
+### Query 04 — Overall Financial Data Summary
 
-### Business Insight
+**Business Question:** What are the aggregate characteristics of recorded transaction amounts?
 
-Average transaction size helps understand customer transaction behavior.
+| Metric | Verified Result |
+|---|---:|
+| Sum of recorded amounts | 4,170,755,712.00 |
+| Average recorded amount | 250,300.41 |
 
----
+Highest and lowest recorded amounts are also calculated by the SQL query.
 
-# Query 5 — Highest & Lowest Transaction
+Mixed-currency amounts should not be used for direct financial comparisons.
 
-### Results
+### Query 05 — Average Interest Rate
 
-Highest Transaction:
+**Business Question:** What is the average recorded interest rate?
 
-**499,972.00**
+**Verified Result:** 6.99%.
 
-Lowest Transaction:
+The query also calculates minimum and maximum recorded rates.
 
-**1,049.00**
+### Query 06 — Records and Unique Clients by Bank
 
-### Business Insight
+**Business Question:** How are banking records and identified clients distributed across banks?
 
-These values define the transaction range and help identify unusually large or small transactions.
-
----
-
-# Query 6 — Customer Distribution by Bank
-
-### Results
-
-| Bank | Customers |
-|------|----------:|
+| Bank | Cleaned Records |
+|---|---:|
 | Unknown Bank | 4,240 |
 | BOFA | 4,226 |
 | CITI | 4,214 |
 | HSBC | 4,159 |
-| CHASE | 4,144 |
+| CHASE | 4,145 |
 | Wells Fargo | 4,014 |
+| **Total** | **24,998** |
 
-### Business Insight
+These are record counts, not distinct customer counts.
 
-Customer distribution is relatively balanced across major banks.
+The SQL query separately calculates distinct identified clients by bank.
 
----
+### Query 07 — Bank Performance Analysis
 
-# Query 7 — Transaction Amount by Bank
+**Business Question:** How do recorded transaction amount aggregates differ by bank?
 
-### Results
-
-| Bank | Total Transaction |
-|------|------------------:|
+| Bank | Sum of Recorded Amounts |
+|---|---:|
 | BOFA | 728,377,576.00 |
 | CITI | 697,919,368.00 |
 | Unknown Bank | 692,871,342.00 |
@@ -138,208 +116,193 @@ Customer distribution is relatively balanced across major banks.
 | Wells Fargo | 681,074,161.00 |
 | HSBC | 678,184,197.00 |
 
-### Business Insight
+The results represent unconverted mixed-currency amounts, so comparisons require caution.
 
-BOFA generated the highest transaction volume.
+### Query 08 — Account Portfolio Distribution
 
----
+**Business Question:** How are records and identified clients distributed across account types?
 
-# Query 8 — Customer Distribution by Account Type
+The SQL query groups records by account type and calculates both record counts and distinct client counts.
 
-### Results
+Account classifications include Loan, Current, Investment, and Savings.
 
-| Account Type | Customers |
-|--------------|----------:|
-| Loan | 6,357 |
-| Current | 6,217 |
-| Investment | 6,213 |
-| Savings | 6,210 |
+### Query 09 — Account Portfolio Financial Analysis
 
-### Business Insight
+**Business Question:** What transaction amount information is available for each account category?
 
-Loan accounts represent the largest customer segment.
+The SQL query calculates:
 
----
+- Valid transaction amount counts.
+- Sums of recorded amounts.
+- Average recorded amounts.
 
-# Query 9 — Transaction Amount by Account Type
+Currency limitations apply to combined financial aggregates.
 
-### Results
+### Query 10 — Average Interest Rate by Bank
 
-| Account Type | Total Transaction |
-|--------------|------------------:|
-| Loan | 1,053,743,923.00 |
-| Investment | 1,051,150,974.00 |
-| Current | 1,035,398,895.00 |
-| Savings | 1,030,461,920.00 |
+**Business Question:** How do average interest rates vary across banks?
 
-### Business Insight
+The SQL query calculates the number of non-NULL interest rates and their average for each bank.
 
-Transaction values are evenly distributed across account types.
+The overall verified average interest rate is 6.99%.
 
----
+### Query 11 — Missing Client IDs by Bank
 
-# Query 10 — Average Interest Rate by Bank
+**Business Question:** Which bank categories have the greatest customer identification gaps?
 
-### Results
+The SQL query calculates:
 
-| Bank | Average Interest Rate |
-|------|----------------------:|
-| BOFA | 7.08% |
-| Wells Fargo | 6.99% |
-| CITI | 6.98% |
-| CHASE | 6.98% |
-| Unknown Bank | 6.97% |
-| HSBC | 6.95% |
+- Total records.
+- Missing client IDs.
+- Percentage of missing identifiers.
 
-### Business Insight
+This supports customer data-quality monitoring.
 
-Interest rates are consistent across banks, with BOFA having the highest average.
+### Query 12 — Loan Status Distribution
 
----
+**Business Question:** How are recorded loan statuses distributed?
 
-# Query 11 — Customer Risk Distribution
+The SQL query groups records by loan status and calculates category percentages.
 
-### Results
+It does not claim to count distinct loan applications.
 
-| Risk Category | Customers |
-|--------------|----------:|
-| Unknown | 8,334 |
-| High | 6,689 |
-| Medium | 6,623 |
-| Low | 3,351 |
+### Query 13 — Currency Distribution
 
-### Business Insight
+**Business Question:** Which currencies appear in the banking dataset?
 
-A significant number of customers fall into the Unknown risk category, indicating an opportunity for improved data quality.
+The dataset includes:
 
----
+- BDT
+- EUR
+- GBP
+- USD
+- Unknown currency values
 
-# Query 12 — Loan Status Distribution
+The query calculates record counts for each currency classification.
 
-### Results
+### Query 14 — Financial Summary by Currency
 
-| Loan Status | Customers |
-|-------------|----------:|
-| Rejected | 6,300 |
-| Pending | 6,256 |
-| Approved | 6,224 |
-| Unknown | 6,217 |
+**Business Question:** What financial amount summaries can be produced separately by currency?
 
-### Business Insight
+The SQL query calculates valid transaction counts, sums, and averages grouped by currency.
 
-Loan approvals, rejections, and pending applications are evenly distributed.
+Currency-specific aggregation avoids combining incompatible monetary units.
 
----
+### Query 15 — Top 10 Recorded Transaction Amounts
 
-# Query 13 — Currency Distribution
+**Business Question:** Which records have the largest numeric transaction amounts?
 
-### Results
+The query retrieves the ten highest recorded numeric amounts with client, bank, and currency details.
 
-| Currency | Accounts |
-|----------|---------:|
-| Unknown | 5,023 |
-| BDT | 5,014 |
-| EUR | 5,004 |
-| GBP | 5,000 |
-| USD | 4,956 |
+These values should not be interpreted as a currency-adjusted ranking.
 
-### Business Insight
+### Query 16 — Monthly Maturity Distribution
 
-The dataset supports multi-currency analysis with a balanced currency distribution.
+**Business Question:** How are maturity dates distributed across calendar months?
 
----
+The SQL query groups records by month using DATE_TRUNC.
 
-# Query 14 — Account Maturity Status
+This represents maturity-date analysis, not account creation trends.
 
-### Results
+### Query 17 — Average Transaction by Bank and Currency
 
-| Status | Accounts |
-|--------|---------:|
-| Expired | 18,746 |
-| Unknown | 6,251 |
+**Business Question:** How do average recorded amounts vary across bank and currency combinations?
 
-### Business Insight
+The query calculates non-NULL transaction counts and average amounts for each bank-currency group.
 
-Most accounts are classified as expired, making maturity reporting an important analytical area.
+### Query 18 — Average Transaction by Account and Currency
 
----
+**Business Question:** How do recorded transaction averages vary across account types and currencies?
 
-# Query 15 — Top Transaction Records
+The query groups records by account category and currency to provide more meaningful financial comparisons.
 
-### Business Question
+### Query 19 — Banking Data Quality by Bank
 
-Which customers have the highest transaction values?
+**Business Question:** Which banks have the highest proportion of missing transaction amounts?
 
-### Business Insight
+The query calculates:
 
-The highest-value transactions help identify premium customers and large financial activities.
+- Total records.
+- Missing client identifiers.
+- Missing financial amounts.
+- Percentage of missing transaction amounts.
+
+This supports targeted data-quality improvements.
+
+### Query 20 — Executive SQL KPI Summary
+
+**Business Question:** What are the main dataset and financial data-quality indicators?
+
+| KPI | Verified Result |
+|---|---:|
+| Cleaned records | 24,998 |
+| Unique identified clients | 11,676 |
+| Valid transaction amounts | 16,663 |
+| Missing transaction amounts | 8,335 |
+| Sum of recorded amounts | 4,170,755,712.00 |
+| Average recorded amount | 250,300.41 |
+| Average interest rate | 6.99% |
+
+Monetary aggregates are unconverted mixed-currency metrics.
 
 ---
 
-# Query 16 — Monthly Account Creation Trend
+## 4. SQL Techniques Demonstrated
 
-### Business Insight
+The 20 analysis queries demonstrate:
 
-Monthly trends provide visibility into account growth patterns and seasonal fluctuations across 2024–2026.
+- COUNT and COUNT DISTINCT
+- SUM and AVG
+- MIN and MAX
+- GROUP BY and ORDER BY
+- NULL handling
+- Conditional aggregation using FILTER
+- Window-based percentage calculations
+- DATE_TRUNC
+- Financial data-quality analysis
+- Currency-aware reporting
 
----
+## 5. Key Business Findings
 
-# Query 17 — Average Transaction by Bank
+### Customer Identification
 
-### Business Insight
+The dataset contains 11,676 distinct identified clients. Missing identifiers limit individual customer-level analysis.
 
-Average transaction values help compare customer spending behavior between banks.
+### Bank Classification
 
----
+Unknown Bank contains 4,240 records, highlighting an opportunity to improve source-data quality.
 
-# Query 18 — Average Transaction by Account Type
+### Financial Completeness
 
-### Business Insight
+8,335 final records have missing transaction amounts.
 
-Current accounts show the highest average transaction amount, followed closely by Savings accounts.
+### Currency Reporting
 
----
+Multiple currencies require separate aggregation or documented FX conversion.
 
-# Query 19 — High-Risk Customers by Bank
+### Analytical Readiness
 
-### Business Insight
+The cleaned dataset provides a basis for reusable SQL analysis, with its remaining data-quality limitations documented.
 
-Monitoring high-risk customers by bank supports compliance, fraud monitoring, and risk management initiatives.
+## 6. Limitations
 
----
+- The dataset is simulated.
+- Some customer identifiers are missing.
+- Financial amount data is incomplete.
+- Multiple currencies have not been converted.
+- No verified customer risk classification exists in the final table.
+- Record counts do not necessarily represent unique customers or loan applications.
 
-# Query 20 — Executive KPI Summary
+## 7. Conclusion
 
-### Results
+The 20 SQL queries demonstrate PostgreSQL data analysis across 24,998 cleaned banking records.
 
-| KPI | Value |
-|------|------:|
-| Total Records | 24,997 |
-| Unique Clients | 11,676 |
-| Total Transaction | 4,170,755,712.00 |
-| Average Transaction | 250,300.41 |
-| Highest Transaction | 499,972.00 |
-| Lowest Transaction | 1,049.00 |
-| Average Interest Rate | 6.99% |
+The project covers financial data quality, customer identification, bank reporting, account analysis, interest rates, maturity analysis, and executive KPIs.
 
-### Business Insight
-
-The executive summary provides a high-level overview of the banking dataset and serves as a quick reference for management reporting.
-
----
-
-# Conclusion
-
-The 20 SQL queries transform raw banking data into meaningful business insights covering customer behavior, transaction performance, account analysis, loan reporting, risk assessment, currency distribution, and executive KPIs.
-
-Together, these analyses demonstrate practical SQL skills for solving real-world business problems and supporting data-driven decision-making.
+These examples demonstrate SQL development, analytical interpretation, and business reporting skills.
 
 ---
 
-## Author
+**Author:** Faisal Kader
 
-**Faisal Kader**
-
-SQL Developer • Data Analytics Enthusiast • PostgreSQL • Business Intelligence
-
-Version 1.0.0
+**Repository:** https://github.com/faisalk8911/banking-data-analytics-postgresql
