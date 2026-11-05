@@ -1,172 +1,127 @@
--- =============================================================
--- Banking Data Analytics Project
--- File Name   : 07_reporting_views.sql
--- Project     : End-to-End Banking Data Analytics using PostgreSQL
--- Author      : Faisal Kader
--- Database    : PostgreSQL
+
+-- ============================================================
+-- BANKING DATA ANALYTICS PROJECT
+-- File: 07_reporting_views.sql
+-- Author: Faisal Kader
+-- Database: banking_analytics
 --
--- Description:
--- This script creates reusable reporting views for business
--- intelligence and dashboard reporting.
+-- Purpose:
+-- Create reusable PostgreSQL views for financial analysis.
 --
--- These views simplify analytical queries and improve
--- maintainability.
--- =============================================================
+-- Source table: banking_transactions_clean_v2
+-- Verified records: 24,998
+--
+-- Monetary values contain multiple currencies.
+-- Summaries must not be interpreted as a single
+-- converted currency total.
+-- ============================================================
 
 
+-- ============================================================
+-- VIEW 1: BANK PERFORMANCE
+-- ============================================================
 
--- =============================================================
--- VIEW 1 : Customer Summary
--- =============================================================
-
-CREATE OR REPLACE VIEW vw_customer_summary AS
-
+CREATE OR REPLACE VIEW vw_bank_performance_v2 AS
 SELECT
-
-    client_id,
-    client_name,
     bank_name,
-    account_type,
-    currency,
-    transaction_amount,
-    interest_rate,
-    maturity_date,
-    loan_status
-
-FROM banking_transactions;
-
-
-
--- =============================================================
--- VIEW 2 : Bank Summary
--- =============================================================
-
-CREATE OR REPLACE VIEW vw_bank_summary AS
-
-SELECT
-
-    bank_name,
-
-    COUNT(*) AS total_customers,
-
-    SUM(transaction_amount) AS total_transaction_amount,
-
-    ROUND(AVG(transaction_amount),2) AS average_transaction,
-
-    ROUND(AVG(interest_rate),2) AS average_interest_rate
-
-FROM banking_transactions
-
+    COUNT(*) AS total_records,
+    COUNT(DISTINCT NULLIF(TRIM(client_id), ''))
+        AS unique_clients,
+    ROUND(SUM(transaction_amount), 2)
+        AS total_transaction_amount,
+    ROUND(AVG(transaction_amount), 2)
+        AS average_transaction_amount,
+    ROUND(AVG(interest_rate), 2)
+        AS average_interest_rate
+FROM banking_transactions_clean_v2
 GROUP BY bank_name;
 
 
+-- ============================================================
+-- VIEW 2: ACCOUNT PORTFOLIO
+-- ============================================================
 
--- =============================================================
--- VIEW 3 : Account Type Summary
--- =============================================================
-
-CREATE OR REPLACE VIEW vw_account_summary AS
-
+CREATE OR REPLACE VIEW vw_account_portfolio_v2 AS
 SELECT
-
-    account_type,
-
-    COUNT(*) AS total_accounts,
-
-    SUM(transaction_amount) AS total_transaction_amount,
-
-    ROUND(AVG(transaction_amount),2) AS average_transaction
-
-FROM banking_transactions
-
-GROUP BY account_type;
-
+    COALESCE(account_type, 'Unknown') AS account_type,
+    COUNT(*) AS total_records,
+    COUNT(DISTINCT NULLIF(TRIM(client_id), ''))
+        AS unique_clients,
+    COUNT(transaction_amount) AS valid_transactions,
+    ROUND(SUM(transaction_amount), 2)
+        AS total_transaction_amount,
+    ROUND(AVG(transaction_amount), 2)
+        AS average_transaction_amount
+FROM banking_transactions_clean_v2
+GROUP BY COALESCE(account_type, 'Unknown');
 
 
--- =============================================================
--- VIEW 4 : Risk Summary
--- =============================================================
+-- ============================================================
+-- VIEW 3: BANKING DATA QUALITY
+-- ============================================================
 
-CREATE OR REPLACE VIEW vw_risk_summary AS
-
+CREATE OR REPLACE VIEW vw_data_quality_v2 AS
 SELECT
+    COALESCE(
+        NULLIF(TRIM(bank_name), ''),
+        'Unknown Bank'
+    ) AS bank_name,
+    COUNT(*) AS total_records,
+    COUNT(*) FILTER (
+        WHERE client_id IS NULL
+    ) AS missing_client_ids,
+    COUNT(*) FILTER (
+        WHERE transaction_amount IS NULL
+    ) AS missing_transaction_amounts,
+    ROUND(
+        100.0 * COUNT(*) FILTER (
+            WHERE transaction_amount IS NULL
+        ) / NULLIF(COUNT(*), 0),
+        2
+    ) AS missing_amount_pct
+FROM banking_transactions_clean_v2
+GROUP BY COALESCE(
+    NULLIF(TRIM(bank_name), ''),
+    'Unknown Bank'
+);
 
-    CASE
 
-        WHEN transaction_amount IS NULL THEN 'Unknown'
+-- ============================================================
+-- VIEW 4: CURRENCY-LEVEL FINANCIAL SUMMARY
+-- ============================================================
 
-        WHEN transaction_amount <100000 THEN 'Low'
+-- Currency-aware reporting prevents different currencies
+-- from being treated as one comparable monetary total.
 
-        WHEN transaction_amount <300000 THEN 'Medium'
-
-        ELSE 'High'
-
-    END AS risk_category,
-
-    COUNT(*) AS total_customers
-
-FROM banking_transactions
-
-GROUP BY risk_category;
-
-
-
--- =============================================================
--- VIEW 5 : Currency Summary
--- =============================================================
-
-CREATE OR REPLACE VIEW vw_currency_summary AS
-
+CREATE OR REPLACE VIEW vw_currency_summary_v2 AS
 SELECT
-
-    currency,
-
-    COUNT(*) AS total_accounts
-
-FROM banking_transactions
-
-GROUP BY currency;
-
-
-
--- =============================================================
--- VIEW 6 : Loan Status Summary
--- =============================================================
-
-CREATE OR REPLACE VIEW vw_loan_status_summary AS
-
-SELECT
-
-    loan_status,
-
-    COUNT(*) AS total_accounts
-
-FROM banking_transactions
-
-GROUP BY loan_status;
+    COALESCE(currency, 'Unknown') AS currency,
+    COUNT(*) AS total_records,
+    COUNT(transaction_amount) AS valid_transactions,
+    ROUND(SUM(transaction_amount), 2)
+        AS transaction_amount,
+    ROUND(AVG(transaction_amount), 2)
+        AS average_transaction_amount
+FROM banking_transactions_clean_v2
+GROUP BY COALESCE(currency, 'Unknown');
 
 
+-- ============================================================
+-- VERIFY REPORTING VIEWS
+-- ============================================================
 
--- =============================================================
--- VIEW 7 : Maturity Summary
--- =============================================================
+SELECT *
+FROM vw_bank_performance_v2
+ORDER BY total_transaction_amount DESC;
 
-CREATE OR REPLACE VIEW vw_maturity_summary AS
+SELECT *
+FROM vw_account_portfolio_v2
+ORDER BY total_transaction_amount DESC;
 
-SELECT
+SELECT *
+FROM vw_data_quality_v2
+ORDER BY missing_amount_pct DESC;
 
-    CASE
-
-        WHEN maturity_date IS NULL THEN 'Unknown'
-
-        WHEN maturity_date < CURRENT_DATE THEN 'Expired'
-
-        ELSE 'Active'
-
-    END AS maturity_status,
-
-    COUNT(*) AS total_accounts
-
-FROM banking_transactions
-
-GROUP BY maturity_status;
+SELECT *
+FROM vw_currency_summary_v2
+ORDER BY currency;
