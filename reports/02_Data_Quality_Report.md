@@ -1,183 +1,138 @@
-# Data Quality Report
-## End-to-End Banking Data Analytics using PostgreSQL
 
-**Project Version:** 1.0.0
+# Banking Data Quality Report
 
----
-
-# Executive Summary
-
-High-quality data is the foundation of reliable analytics. This report documents the data quality assessment, cleaning activities, validation rules, and improvements applied to the banking dataset before performing business analysis.
-
-The objective was to ensure that the dataset is accurate, consistent, complete, and suitable for decision-making.
+**Project:** End-to-End Banking Data Analytics with PostgreSQL  
+**Author:** Faisal Kader  
+**Database:** banking_analytics  
+**Dataset:** Simulated Banking Records
 
 ---
 
-# Dataset Summary
+## 1. Executive Summary
 
-| Metric | Value |
-|---------|-------:|
-| Original Records | 25,500 |
-| Final Records | 24,997 |
-| Duplicate Records Removed | 503 |
-| Unique Clients | 11,676 |
+This report presents the data quality assessment and cleaning results of a simulated banking dataset containing 25,500 records.
 
----
+The SQL workflow involved missing-value assessment, category standardization, numeric and date conversion, validation, and exact duplicate removal.
 
-# Data Quality Dimensions
+The final cleaned dataset contains 24,998 records after removing 502 duplicate rows.
 
-The following quality dimensions were evaluated:
+## 2. Verified Dataset Summary
 
-- Completeness
-- Accuracy
-- Consistency
-- Validity
-- Uniqueness
-- Integrity
+| Metric | Result |
+|---|---:|
+| Original records | 25,500 |
+| Staging records | 25,500 |
+| Duplicate rows removed | 502 |
+| Final cleaned records | 24,998 |
+| Unique identified clients | 11,676 |
 
----
+## 3. Initial Data Quality Findings
 
-# Data Quality Issues Identified
+| Data Quality Issue | Affected Records | Percentage |
+|---|---:|---:|
+| Missing client IDs | 12,726 | 49.9% |
+| Missing transaction amounts | 8,505 | 33.4% |
+| Missing bank names | 4,325 | 17.0% |
+| Missing maturity dates | 6,380 | 25.0% |
 
-The initial assessment identified several issues within the raw dataset.
+These findings demonstrate the need for data quality checks before financial reporting.
 
-| Issue | Status |
-|--------|--------|
-| Missing Values | Identified |
-| Duplicate Records | Identified |
-| Inconsistent Categories | Identified |
-| Invalid Email Values | Identified |
-| Missing Client IDs | Identified |
-| Missing Phone Numbers | Identified |
-| Unknown Banking Values | Identified |
+## 4. Data Cleaning Activities
 
----
+### Missing Values
 
-# Data Cleaning Activities
+- Removed unnecessary whitespace.
+- Converted blank strings into SQL NULL.
+- Preserved missing customer identifiers.
+- Preserved missing financial values.
+- Assigned Unknown Bank to missing bank names.
 
-## Missing Values
+### Standardization
 
-Missing values were reviewed across all columns.
+Standardized the following fields:
 
-Actions taken:
+- Customer names
+- Bank names
+- Account types
+- Currency codes
+- Loan statuses
 
-- Retained NULL values where source information was unavailable.
-- Standardized unknown categorical values using **"Unknown"** where appropriate.
-- Preserved missing business information to avoid introducing incorrect data.
+### Data Type Conversion
 
----
+- Converted transaction amounts into NUMERIC(15,2).
+- Converted interest rates into NUMERIC(6,2).
+- Converted maturity dates into PostgreSQL DATE.
 
-## Duplicate Detection
+Interest-rate conversion used a documented assumption that embedded spaces represented decimal separators.
 
-Duplicate records were identified using PostgreSQL window functions.
+## 5. Duplicate Detection and Removal
 
-Each duplicate group was reviewed before removing redundant records.
+PostgreSQL ROW_NUMBER() was used to identify duplicate rows across 12 standardized business fields.
 
-### Results
+Repeated client IDs alone were not treated as duplicates.
 
-| Metric | Value |
-|---------|-------:|
-| Duplicate Records Removed | 503 |
-| Remaining Records | 24,997 |
+| Metric | Result |
+|---|---:|
+| Original records | 25,500 |
+| Duplicate rows removed | 502 |
+| Final cleaned records | 24,998 |
 
----
+## 6. Data Validation Results
 
-## Category Standardization
+| Validation Check | Result |
+|---|---:|
+| Valid transaction amounts in staging | 16,995 |
+| Missing transaction amounts in staging | 8,505 |
+| Converted interest rates | 12,600 |
+| Missing interest rates | 12,900 |
+| Unconverted interest rates | 0 |
+| Converted maturity dates | 19,120 |
+| Missing maturity dates | 6,380 |
+| Date representation mismatches | 0 |
 
-The following fields were standardized:
+## 7. Final Data Quality Results
 
-- Bank Name
-- Account Type
-- Currency
-- Risk Category
-- Loan Status
-- Maturity Status
-- Interest Classification
+| Metric | Result |
+|---|---:|
+| Final cleaned records | 24,998 |
+| Unique identified clients | 11,676 |
+| Valid transaction amounts | 16,663 |
+| Missing transaction amounts | 8,335 |
+| Average interest rate | 6.99% |
 
-This ensures consistent reporting and aggregation.
+Missing data was retained where source information was unavailable.
 
----
+The cleaned dataset is suitable for SQL analytics with these completeness limitations clearly documented.
 
-## Email Validation
+## 8. Business Value
 
-Customer email addresses were reviewed.
+The completed workflow supports:
 
-Invalid or missing email values were flagged using the **email_check** column for reporting purposes.
+- Financial data quality monitoring
+- Duplicate detection and removal
+- Consistent reporting categories
+- Customer identification analysis
+- Transaction completeness reporting
+- Reusable SQL reporting
+- Data-driven business decisions
 
----
+## 9. Recommendations
 
-## Phone Number Review
-
-Phone numbers were inspected for missing values and formatting consistency.
-
-Where valid information was unavailable, values were retained as NULL to preserve data integrity.
-
----
-
-# Validation Checks
-
-Validation queries confirmed:
-
-- Duplicate records successfully removed.
-- No unexpected NULL values in key reporting fields.
-- Standardized category names.
-- Valid transaction amounts.
-- Consistent interest rate values.
-- Reliable reporting dimensions.
-
----
-
-# Data Quality Improvements
-
-| Area | Improvement |
-|------|-------------|
-| Duplicate Records | Removed |
-| Category Consistency | Standardized |
-| Email Validation | Completed |
-| Missing Value Handling | Improved |
-| Reporting Accuracy | Increased |
-| Query Reliability | Improved |
-
----
-
-# Business Impact
-
-Improved data quality provides:
-
-- Accurate KPI calculations
-- Reliable customer reporting
-- Better financial analysis
-- Consistent business intelligence
-- Improved decision-making
-- Increased confidence in reporting
-
----
-
-# Recommendations
-
-To maintain high-quality data in future datasets:
-
-- Validate data during import.
-- Apply standard naming conventions.
-- Enforce unique identifiers where possible.
+- Monitor missing customer identifiers.
+- Investigate Unknown Bank records.
+- Validate financial values during data import.
+- Establish source-system rules for date and interest-rate formats.
 - Perform regular duplicate checks.
-- Validate email and phone formats automatically.
-- Monitor data quality through scheduled audits.
+- Keep monetary reporting separated by currency unless FX conversion is applied.
+- Introduce automated data-quality tests.
+
+## 10. Conclusion
+
+The SQL workflow transformed 25,500 raw banking records into 24,998 deduplicated records.
+
+The resulting dataset supports banking analytics while retaining visibility into missing values and other source-data limitations.
 
 ---
 
-# Conclusion
-
-The banking dataset was successfully transformed into a clean, consistent, and analysis-ready database.
-
-The improvements made during the data quality process ensure that all subsequent SQL analysis, reporting views, and executive reports are based on reliable and trustworthy data.
-
----
-
-## Author
-
-**Faisal Kader**
-
-SQL Developer • Data Analytics Enthusiast • PostgreSQL • Business Intelligence
-
-Version 1.0.0
+**Author:** Faisal Kader  
+**Technologies:** PostgreSQL, SQL, pgAdmin 4
