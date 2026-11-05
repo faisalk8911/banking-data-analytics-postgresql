@@ -1,198 +1,150 @@
--- =============================================================
--- Banking Data Analytics Project
--- File Name   : 09_indexes.sql
--- Project     : End-to-End Banking Data Analytics using PostgreSQL
--- Author      : Faisal Kader
--- Database    : PostgreSQL
+
+-- ============================================================
+-- BANKING DATA ANALYTICS PROJECT
+-- File: 09_indexes.sql
+-- Author: Faisal Kader
+-- Database: banking_analytics
 --
--- Description:
--- This script creates indexes to improve query performance
--- for frequently searched, filtered, sorted, and grouped
--- columns used throughout the project.
+-- Purpose:
+-- Create indexes for common banking data queries.
 --
--- These indexes are based on the business analysis queries
--- and reporting views developed in this project.
--- =============================================================
-
-
--- =============================================================
--- SECTION A : PRIMARY BUSINESS INDEXES
--- =============================================================
+-- Source: banking_transactions_clean_v2
+-- Verified records: 24,998
 --
--- These indexes improve performance for searches
--- and filtering on key business columns.
--- =============================================================
+-- NOTE:
+-- Indexes can improve selected queries, but they also
+-- require storage and increase write overhead.
+-- Performance improvements must be benchmarked.
+-- ============================================================
 
 
--- Client ID
+-- ============================================================
+-- STEP 1: CUSTOMER LOOKUP INDEX
+-- ============================================================
 
-CREATE INDEX IF NOT EXISTS idx_client_id
-ON banking_transactions(client_id);
+CREATE INDEX IF NOT EXISTS idx_clean_v2_client_id
+ON banking_transactions_clean_v2 (client_id);
 
 
--- Bank Name
+-- ============================================================
+-- STEP 2: BANK LOOKUP INDEX
+-- ============================================================
 
-CREATE INDEX IF NOT EXISTS idx_bank_name
-ON banking_transactions(bank_name);
+CREATE INDEX IF NOT EXISTS idx_clean_v2_bank_name
+ON banking_transactions_clean_v2 (bank_name);
 
 
--- Account Type
+-- ============================================================
+-- STEP 3: ACCOUNT TYPE INDEX
+-- ============================================================
 
-CREATE INDEX IF NOT EXISTS idx_account_type
-ON banking_transactions(account_type);
+CREATE INDEX IF NOT EXISTS idx_clean_v2_account_type
+ON banking_transactions_clean_v2 (account_type);
 
 
--- Currency
+-- ============================================================
+-- STEP 4: CURRENCY INDEX
+-- ============================================================
 
-CREATE INDEX IF NOT EXISTS idx_currency
-ON banking_transactions(currency);
+CREATE INDEX IF NOT EXISTS idx_clean_v2_currency
+ON banking_transactions_clean_v2 (currency);
 
 
--- Loan Status
+-- ============================================================
+-- STEP 5: LOAN STATUS INDEX
+-- ============================================================
 
-CREATE INDEX IF NOT EXISTS idx_loan_status
-ON banking_transactions(loan_status);
+CREATE INDEX IF NOT EXISTS idx_clean_v2_loan_status
+ON banking_transactions_clean_v2 (loan_status);
 
 
+-- ============================================================
+-- STEP 6: TRANSACTION AMOUNT INDEX
+-- ============================================================
 
--- =============================================================
--- SECTION B : FINANCIAL INDEXES
--- =============================================================
---
--- Improve performance of aggregation,
--- filtering and sorting.
--- =============================================================
+CREATE INDEX IF NOT EXISTS idx_clean_v2_transaction_amount
+ON banking_transactions_clean_v2
+(transaction_amount DESC);
 
 
-CREATE INDEX IF NOT EXISTS idx_transaction_amount
-ON banking_transactions(transaction_amount);
+-- ============================================================
+-- STEP 7: MATURITY DATE INDEX
+-- ============================================================
 
+CREATE INDEX IF NOT EXISTS idx_clean_v2_maturity_date
+ON banking_transactions_clean_v2 (maturity_date);
 
-CREATE INDEX IF NOT EXISTS idx_interest_rate
-ON banking_transactions(interest_rate);
 
+-- ============================================================
+-- STEP 8: BANK AND CURRENCY COMPOSITE INDEX
+-- ============================================================
 
-CREATE INDEX IF NOT EXISTS idx_risk_category
-ON banking_transactions(risk_category);
+CREATE INDEX IF NOT EXISTS idx_clean_v2_bank_currency
+ON banking_transactions_clean_v2
+(bank_name, currency);
 
 
-CREATE INDEX IF NOT EXISTS idx_interest_classification
-ON banking_transactions(interest_classification);
+-- ============================================================
+-- STEP 9: UPDATE QUERY PLANNER STATISTICS
+-- ============================================================
 
+ANALYZE banking_transactions_clean_v2;
 
 
--- =============================================================
--- SECTION C : DATE INDEXES
--- =============================================================
---
--- Improve date filtering and trend analysis.
--- =============================================================
+-- ============================================================
+-- STEP 10: VERIFY CREATED INDEXES
+-- ============================================================
 
+SELECT
+    indexname,
+    indexdef
+FROM pg_indexes
+WHERE schemaname = 'public'
+  AND tablename = 'banking_transactions_clean_v2'
+ORDER BY indexname;
 
-CREATE INDEX IF NOT EXISTS idx_maturity_date
-ON banking_transactions(maturity_date);
 
+-- ============================================================
+-- STEP 11: INSPECT A QUERY EXECUTION PLAN
+-- ============================================================
 
-CREATE INDEX IF NOT EXISTS idx_maturity_status
-ON banking_transactions(maturity_status);
-
-
-
--- =============================================================
--- SECTION D : CUSTOMER CONTACT INDEXES
--- =============================================================
---
--- Improve searching customer contact information.
--- =============================================================
-
-
-CREATE INDEX IF NOT EXISTS idx_email
-ON banking_transactions(email);
-
-
-CREATE INDEX IF NOT EXISTS idx_phone
-ON banking_transactions(phone);
-
-
-
--- =============================================================
--- SECTION E : VALIDATION INDEXES
--- =============================================================
---
--- Used during data quality validation.
--- =============================================================
-
-
-CREATE INDEX IF NOT EXISTS idx_email_check
-ON banking_transactions(email_check);
-
-
-CREATE INDEX IF NOT EXISTS idx_id_missing
-ON banking_transactions(id_missing);
-
-
-
--- =============================================================
--- SECTION F : PERFORMANCE TEST
--- =============================================================
---
--- Use EXPLAIN ANALYZE to verify
--- index usage and query performance.
--- =============================================================
-
-
-EXPLAIN ANALYZE
-
-SELECT *
-
-FROM banking_transactions
-
-WHERE bank_name = 'HSBC';
-
-
-
-EXPLAIN ANALYZE
-
-SELECT *
-
-FROM banking_transactions
-
-WHERE client_id = 70435;
-
-
-
-EXPLAIN ANALYZE
-
-SELECT *
-
-FROM banking_transactions
-
-WHERE risk_category = 'High';
-
-
-
-EXPLAIN ANALYZE
-
-SELECT *
-
-FROM banking_transactions
-
-WHERE maturity_status = 'Expired';
-
-
-
-EXPLAIN ANALYZE
-
-SELECT *
-
-FROM banking_transactions
-
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+    client_id,
+    client_name,
+    bank_name,
+    transaction_amount
+FROM banking_transactions_clean_v2
+WHERE client_id = '70435';
+
+
+-- ============================================================
+-- STEP 12: INSPECT TOP TRANSACTION QUERY
+-- ============================================================
+
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+    client_id,
+    bank_name,
+    currency,
+    transaction_amount
+FROM banking_transactions_clean_v2
+WHERE transaction_amount IS NOT NULL
 ORDER BY transaction_amount DESC
-
 LIMIT 10;
 
 
+-- ============================================================
+-- IMPORTANT NOTES
+-- ============================================================
 
--- =============================================================
--- END OF FILE
--- =============================================================
+-- PostgreSQL may choose sequential scans instead of
+-- index scans, especially for small tables or queries
+-- returning a large percentage of rows.
+--
+-- EXPLAIN ANALYZE shows actual execution behavior.
+-- Index creation alone does not demonstrate speedup.
+--
+-- Compare execution plans and timings before and after
+-- indexing to establish any performance improvement.
+-- ============================================================
