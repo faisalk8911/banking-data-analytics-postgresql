@@ -1,49 +1,57 @@
-# Bank Performance Report
-## End-to-End Banking Data Analytics using PostgreSQL
 
-**Project Version:** 1.0.0
+# Banking Performance Analysis Report
 
----
-
-# Executive Summary
-
-This report evaluates the performance of banks represented in the dataset by analyzing customer distribution, transaction volumes, average transaction values, and interest rates.
-
-The objective is to compare banking performance using SQL-generated metrics and identify key business insights that support strategic decision-making.
+**Project:** End-to-End Banking Data Analytics with PostgreSQL  
+**Author:** Faisal Kader  
+**Database:** banking_analytics  
+**Dataset:** Simulated Banking Records
 
 ---
 
-# Dataset Summary
+## 1. Executive Summary
 
-| Metric | Value |
-|---------|-------:|
-| Total Records | 24,997 |
-| Unique Customers | 11,676 |
-| Participating Banks | 6 |
+This report analyzes bank-level record distribution, transaction amount summaries, and interest rates using PostgreSQL.
 
----
+The objective is to demonstrate SQL-based banking performance reporting while identifying data-quality limitations that affect financial comparisons.
 
-# Customer Distribution by Bank
+The final cleaned dataset contains 24,998 records and 11,676 unique identified clients.
 
-| Bank | Customers |
-|------|----------:|
+## 2. Dataset Overview
+
+| Metric | Result |
+|---|---:|
+| Original records | 25,500 |
+| Final cleaned records | 24,998 |
+| Duplicate rows removed | 502 |
+| Unique identified clients | 11,676 |
+| Bank categories | 6 |
+
+The six categories include five named banks and one Unknown Bank category.
+
+## 3. Bank-Level Record Distribution
+
+| Bank | Cleaned Records |
+|---|---:|
 | Unknown Bank | 4,240 |
 | BOFA | 4,226 |
 | CITI | 4,214 |
 | HSBC | 4,159 |
-| CHASE | 4,144 |
+| CHASE | 4,145 |
 | Wells Fargo | 4,014 |
+| **Total** | **24,998** |
 
 ### Business Insight
 
-Customer distribution is balanced across all participating banks, indicating that no single institution dominates the customer base.
+The distribution of banking records is relatively balanced across the six categories.
 
----
+Unknown Bank represents approximately 17% of the cleaned records, highlighting a significant data-quality concern.
 
-# Transaction Value by Bank
+These values represent record counts rather than distinct customer counts.
 
-| Bank | Total Transaction Amount |
-|------|-------------------------:|
+## 4. Recorded Transaction Amounts by Bank
+
+| Bank | Sum of Recorded Amounts |
+|---|---:|
 | BOFA | 728,377,576.00 |
 | CITI | 697,919,368.00 |
 | Unknown Bank | 692,871,342.00 |
@@ -51,93 +59,95 @@ Customer distribution is balanced across all participating banks, indicating tha
 | Wells Fargo | 681,074,161.00 |
 | HSBC | 678,184,197.00 |
 
-### Business Insight
+### Interpretation
 
-BOFA generated the highest total transaction value within the dataset, demonstrating strong customer financial activity.
+BOFA has the highest unconverted sum of recorded transaction amounts in this dataset.
+
+However, the source contains multiple currencies, including USD, BDT, EUR, and GBP.
+
+Therefore, these bank-level sums must not be interpreted as comparable single-currency transaction volumes.
+
+A reliable financial comparison would require either currency-specific analysis or consistent foreign-exchange conversion.
+
+## 5. Average Interest Rate by Bank
+
+The existing SQL analysis includes average interest rates grouped by bank.
+
+The overall verified average interest rate is 6.99%.
+
+The bank-level reporting view calculates averages using available non-NULL interest-rate values.
+
+These averages describe the sample records and do not establish actual market interest rates or financial product pricing.
+
+## 6. Data Quality Considerations
+
+The analysis identified several reporting limitations:
+
+- Missing client identifiers.
+- Missing transaction amounts.
+- Unknown bank classifications.
+- Mixed transaction currencies.
+- Missing interest rates.
+- Incomplete maturity information.
+
+Missing values are preserved rather than replaced with fabricated financial data.
+
+## 7. Reusable PostgreSQL Reporting Views
+
+The project includes:
+
+- vw_bank_performance_v2
+- vw_account_portfolio_v2
+- vw_data_quality_v2
+- vw_currency_summary_v2
+
+These views support bank-level reporting, account analysis, data-quality monitoring, and currency-specific summaries.
+
+## 8. SQL Techniques Demonstrated
+
+The bank performance analysis uses:
+
+- COUNT
+- COUNT DISTINCT
+- SUM
+- AVG
+- GROUP BY
+- ORDER BY
+- Conditional aggregation
+- NULL handling
+- CREATE OR REPLACE VIEW
+
+## 9. Business Recommendations
+
+1. Investigate records assigned to Unknown Bank.
+2. Improve customer identifier completeness.
+3. Report monetary values separately by currency.
+4. Monitor missing transaction amounts.
+5. Validate bank classifications during data import.
+6. Compare financial performance only when consistent currency and reporting definitions are available.
+
+## 10. Business Value
+
+This project demonstrates practical SQL reporting skills relevant to:
+
+- Financial data analysis.
+- Banking operations.
+- Customer data-quality assessment.
+- Account portfolio reporting.
+- Transaction data monitoring.
+- Executive SQL reporting.
+
+## 11. Conclusion
+
+The PostgreSQL analysis demonstrates bank-level reporting across 24,998 cleaned banking records.
+
+The results provide insights into record distribution, recorded transaction amounts, interest rates, and data-quality limitations.
+
+The project showcases SQL aggregation, financial data interpretation, and reusable reporting techniques.
 
 ---
 
-# Average Interest Rate by Bank
+**Author:** Faisal Kader  
+**Technologies:** PostgreSQL, SQL, pgAdmin 4
 
-| Bank | Average Interest Rate |
-|------|----------------------:|
-| BOFA | 7.08% |
-| Wells Fargo | 6.99% |
-| CITI | 6.98% |
-| CHASE | 6.98% |
-| Unknown Bank | 6.97% |
-| HSBC | 6.95% |
-
-### Business Insight
-
-Interest rates remain consistent across banks, suggesting standardized lending and investment products.
-
----
-
-# Average Transaction by Bank
-
-The average transaction value remains relatively stable across all participating banks, indicating similar customer transaction behavior.
-
-### Business Insight
-
-Consistent transaction averages suggest balanced customer engagement and comparable banking activity across institutions.
-
----
-
-# Comparative Performance
-
-| Performance Indicator | Leading Bank |
-|-----------------------|--------------|
-| Customer Count | Unknown Bank |
-| Total Transaction Value | BOFA |
-| Average Interest Rate | BOFA |
-
----
-
-# Key Findings
-
-- Six banking institutions are represented in the dataset.
-- Customer distribution is balanced across banks.
-- BOFA recorded the highest transaction volume.
-- Interest rates show minimal variation between banks.
-- The dataset supports comparative banking performance analysis.
-
----
-
-# Business Value
-
-The bank performance analysis supports:
-
-- Executive performance reporting
-- Customer distribution analysis
-- Financial activity monitoring
-- Strategic business planning
-- Benchmarking between institutions
-- Banking portfolio evaluation
-
----
-
-# Recommendations
-
-- Investigate the large number of records categorized as **Unknown Bank** to improve reporting quality.
-- Monitor transaction trends over time to identify growth opportunities.
-- Compare future datasets to evaluate changes in bank performance.
-- Extend reporting with profitability and customer retention metrics where available.
-
----
-
-# Conclusion
-
-The bank performance analysis demonstrates how SQL can be used to compare financial institutions using operational data.
-
-These insights provide management with a clear understanding of customer distribution, transaction activity, and interest rate trends while supporting strategic decision-making.
-
----
-
-## Author
-
-**Faisal Kader**
-
-SQL Developer • Data Analytics Enthusiast • PostgreSQL • Business Intelligence
-
-Version 1.0.0
+**Repository:** https://github.com/faisalk8911/banking-data-analytics-postgresql
