@@ -1,142 +1,119 @@
-# Project Summary
-## End-to-End Banking Data Analytics using PostgreSQL
 
-**Version:** 1.0.0
+# Banking Data Analytics — Project Summary
 
----
-
-# Executive Summary
-
-This project demonstrates a complete end-to-end banking data analytics workflow using PostgreSQL. Starting with a raw banking dataset, the project applies data cleaning, validation, duplicate removal, business analysis, reporting, and database optimization to produce a reliable and analysis-ready database.
-
-The repository simulates a real-world SQL analytics project commonly performed by Data Analysts, Business Intelligence Analysts, and SQL Developers within the banking and financial services industry.
+**Project:** End-to-End Banking Data Analytics with PostgreSQL  
+**Author:** Faisal Kader  
+**Technologies:** PostgreSQL, SQL, pgAdmin 4, GitHub  
+**Project Type:** Financial Data Cleaning and SQL Analytics
 
 ---
 
-# Project Objectives
+## Executive Summary
 
-The project was developed to:
+Developed an end-to-end PostgreSQL banking analytics solution using a simulated financial dataset.
 
-- Build a PostgreSQL database from raw banking data.
-- Improve data quality through cleaning and validation.
-- Remove duplicate records.
-- Create reusable reporting views.
-- Perform business-focused SQL analysis.
-- Optimize database performance.
-- Develop reusable PostgreSQL functions.
-- Produce professional project documentation.
+The project involved data profiling, cleaning, validation, duplicate detection, financial data transformation, and SQL-based business reporting.
 
----
+Starting with 25,500 raw banking records, the workflow identified and removed 502 duplicate rows, producing 24,998 cleaned records.
 
-# Dataset Summary
+The project also includes 20 business-focused SQL queries, reusable PostgreSQL reporting views, SQL functions, indexing, and query execution analysis.
 
-| Metric | Value |
-|---------|-------:|
-| Original Records | 25,500 |
-| Final Records | 24,997 |
-| Duplicate Records Removed | 503 |
-| Unique Clients | 11,676 |
+## Verified Project Results
 
----
+| Metric | Result |
+|---|---:|
+| Original records | 25,500 |
+| Final cleaned records | 24,998 |
+| Duplicate rows removed | 502 |
+| Unique identified clients | 11,676 |
+| Valid transaction amounts | 16,663 |
+| Missing transaction amounts | 8,335 |
+| Sum of recorded amounts | 4,170,755,712.00 |
+| Average recorded amount | 250,300.41 |
+| Average interest rate | 6.99% |
 
-# Key Business KPIs
+**Financial reporting note:** Monetary aggregates include multiple currencies without FX conversion. They are not single-currency financial totals.
 
-| KPI | Value |
-|------|------:|
-| Total Transaction Amount | 4,170,755,712.00 |
-| Average Transaction | 250,300.41 |
-| Highest Transaction | 499,972.00 |
-| Lowest Transaction | 1,049.00 |
-| Average Interest Rate | 6.99% |
+## SQL Data Cleaning
 
----
+The project demonstrates:
 
-# Major Deliverables
+- Missing-value detection and handling
+- Text standardization
+- Bank and account classification consistency
+- Financial amount conversion
+- Interest rate conversion
+- Maturity date conversion and validation
+- Duplicate detection using ROW_NUMBER()
+- Preservation of legitimate repeated client IDs
 
-The completed repository includes:
+## Banking Data Analysis
 
-- PostgreSQL Database
-- Database Schema
-- CSV Data Import
-- Data Cleaning Scripts
-- Data Validation Scripts
-- Duplicate Removal Scripts
-- Reporting Views
-- 20 Business Analysis Queries
-- Performance Indexes
-- Query Performance Analysis
-- PostgreSQL Functions
-- Professional Documentation
+The SQL analysis covers:
 
----
+- Bank performance
+- Account portfolio composition
+- Customer identification
+- Transaction amount completeness
+- Loan status distribution
+- Currency-level reporting
+- Maturity trends
+- Executive KPI summaries
 
-# Skills Demonstrated
+## Reusable PostgreSQL Reporting
 
-## Database Development
+Four reporting views were developed:
 
-- PostgreSQL
-- SQL
-- Database Design
-- Table Creation
-- Data Import
+1. vw_bank_performance_v2
+2. vw_account_portfolio_v2
+3. vw_data_quality_v2
+4. vw_currency_summary_v2
 
-## Data Preparation
+Five PostgreSQL reporting functions provide reusable access to customer details, bank transaction summaries, data quality, account portfolios, and executive KPIs.
 
-- Data Cleaning
-- Data Validation
-- Duplicate Detection
-- Data Transformation
+## Query Performance Analysis
 
-## Analytics
+PostgreSQL execution plans were examined using:
 
-- Customer Analysis
-- Banking Analytics
-- Risk Analysis
-- Loan Analysis
-- KPI Reporting
-- Executive Reporting
+EXPLAIN (ANALYZE, BUFFERS)
 
-## Database Performance
+The analysis included query execution times, scan methods, aggregation operations, sorting, and buffer usage.
 
-- Indexing
-- Query Optimization
-- EXPLAIN ANALYZE
+Indexing strategies were documented, but no measured performance improvement is claimed without comparative benchmarking.
 
-## Professional Practices
+## Business Value
 
-- Git
-- GitHub
-- Technical Documentation
+The project demonstrates how SQL can help organizations:
 
----
+- Identify financial data-quality problems
+- Reduce duplicate reporting records
+- Improve consistency in financial datasets
+- Produce reusable business reports
+- Analyze account and transaction activity
+- Support data-driven business decisions
 
-# Business Value
+## Project Deliverables
 
-The completed project demonstrates how SQL can transform raw operational data into meaningful business intelligence.
+- PostgreSQL database structure
+- SQL data-import workflow
+- Cleaning and validation scripts
+- Deduplicated reporting dataset
+- 20 SQL analysis queries
+- Four reporting views
+- Five PostgreSQL functions
+- Index definitions
+- Query performance analysis
+- Technical documentation
+- Upwork portfolio screenshots
 
-The resulting database supports:
+## Conclusion
 
-- Customer Reporting
-- Financial Analysis
-- Risk Assessment
-- Loan Portfolio Reporting
-- Executive Dashboards
-- Management Decision-Making
+This project demonstrates practical SQL, PostgreSQL, data cleaning, validation, and financial analytics capabilities.
+
+The verified workflow transforms 25,500 simulated banking records into 24,998 cleaned analytical records suitable for SQL reporting and data-quality monitoring.
 
 ---
 
-# Conclusion
+**Author:** Faisal Kader
 
-This project demonstrates practical SQL development skills beyond basic querying. It covers the complete analytics lifecycle, including database creation, data preparation, reporting, performance optimization, and professional documentation.
-
-It serves as a portfolio-ready project showcasing technical capability, analytical thinking, and professional project organization.
-
----
-
-## Author
-
-**Faisal Kader**
-
-SQL Developer • Data Analytics Enthusiast • PostgreSQL • Business Intelligence
-
-Version 1.0.0
+**Repository:** https://github.com/faisalk8911/banking-data-analytics-postgresql
