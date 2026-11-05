@@ -1,309 +1,212 @@
-# Project Documentation
-## End-to-End Banking Data Analytics using PostgreSQL
 
-**Version:** 1.0.0  
-**Project Type:** SQL Data Analytics Portfolio Project  
-**Database:** PostgreSQL 16  
-**Author:** Faisal Kader
+# End-to-End Banking Data Analytics with PostgreSQL
 
----
+## Project Documentation
 
-# 1. Introduction
-
-This project demonstrates an end-to-end banking data analytics workflow using PostgreSQL. It simulates a real-world banking environment where raw customer and transaction data is transformed into clean, structured, and analysis-ready information for reporting and decision-making.
-
-The project covers the complete SQL analytics lifecycle, including database design, data import, data cleaning, validation, duplicate detection, business analysis, reporting views, query optimization, and reusable PostgreSQL functions.
-
-Rather than focusing on isolated SQL exercises, this repository demonstrates practical techniques used by Data Analysts, SQL Developers, and Business Intelligence professionals in enterprise environments.
+**Author:** Faisal Kader  
+**Database:** banking_analytics  
+**Technology:** PostgreSQL, SQL, pgAdmin 4  
+**Project Type:** Banking Data Analytics Portfolio
 
 ---
 
-# 2. Business Problem
+## 1. Project Overview
 
-Financial institutions generate large volumes of transactional data every day. Raw operational datasets frequently contain missing values, inconsistent records, duplicate entries, and formatting issues that reduce reporting accuracy.
+This project demonstrates an end-to-end SQL banking analytics workflow using PostgreSQL.
 
-Without proper data preparation, organizations face challenges such as:
+The project transforms a simulated banking dataset containing 25,500 records into a structured analytical dataset through data cleaning, validation, financial data conversion, and duplicate removal.
 
-- Inaccurate business reports
-- Duplicate customer records
-- Poor customer segmentation
-- Inefficient risk analysis
-- Inconsistent financial reporting
-- Reduced confidence in business decisions
+The final cleaned dataset contains 24,998 records.
 
-This project addresses these challenges by transforming raw banking data into a reliable, standardized, and analysis-ready PostgreSQL database.
+The project also demonstrates SQL business analysis, reusable reporting views, PostgreSQL functions, indexing, and query performance analysis.
 
----
+## 2. Business Problem
 
-# 3. Project Objectives
+Raw banking datasets frequently contain missing information, duplicate records, inconsistent categories, and incorrectly formatted financial values.
 
-The objectives of this project are to:
+These issues can affect customer reporting, financial analysis, and management decisions.
 
-- Design a PostgreSQL database
-- Import raw banking data
-- Clean inconsistent records
-- Handle missing values
-- Validate dataset quality
-- Detect and remove duplicate records
-- Build reusable SQL reporting views
-- Perform business-focused SQL analysis
-- Improve database performance using indexes
-- Analyze query execution plans
-- Develop reusable PostgreSQL functions
-- Produce professional project documentation
+The objective was to develop an SQL-based workflow that improves data consistency while preserving legitimate transaction records.
 
----
+## 3. Project Objectives
 
-# 4. Dataset Overview
+- Create a PostgreSQL banking database.
+- Import and preserve original banking records.
+- Identify missing and inconsistent values.
+- Standardize customer, bank, and account information.
+- Convert transaction amounts, interest rates, and dates.
+- Identify and remove exact duplicate records.
+- Develop reusable PostgreSQL reporting views.
+- Perform banking and account portfolio analysis.
+- Evaluate SQL execution performance.
+- Document the analytical workflow.
 
-The dataset contains simulated banking customer and transaction information.
+## 4. Verified Dataset Summary
 
-The information includes customer details, account information, transaction amounts, interest rates, loan status, maturity information, risk categories, and contact information.
+| Metric | Result |
+|---|---:|
+| Original records | 25,500 |
+| Staging records | 25,500 |
+| Duplicate rows removed | 502 |
+| Final cleaned records | 24,998 |
+| Unique identified clients | 11,676 |
+| Valid transaction amounts | 16,663 |
+| Missing transaction amounts | 8,335 |
 
-### Dataset Statistics
+## 5. Database Architecture
 
-| Metric | Value |
-|---------|-------:|
-| Original Records | 25,500 |
-| Final Records | 24,997 |
-| Duplicate Records Removed | 503 |
-| Unique Clients | 11,676 |
+The updated project uses three primary tables:
 
----
+| Table | Purpose |
+|---|---|
+| banking_transactions_raw | Stores original banking data |
+| banking_transactions_staging | Supports cleaning and data conversion |
+| banking_transactions_clean_v2 | Contains final deduplicated records |
 
-# 5. Database Design
+The original raw records are preserved during data preparation.
 
-The project uses PostgreSQL as the database management system.
+## 6. Data Cleaning and Transformation
 
-The primary table stores banking transaction records and includes fields related to customers, accounts, transactions, loans, and risk classifications.
+The cleaning process includes:
 
-Main attributes include:
+- Trimming unnecessary whitespace.
+- Converting blank values into SQL NULL.
+- Standardizing bank names and account types.
+- Normalizing currency codes and loan statuses.
+- Converting transaction amounts into numeric values.
+- Converting interest rates into numeric values.
+- Converting maturity dates into PostgreSQL DATE values.
 
-- Client ID
-- Client Name
-- Bank Name
-- Account Type
-- Currency
-- Transaction Amount
-- Interest Rate
-- Risk Category
-- Loan Status
-- Maturity Date
-- Maturity Status
-- Email
-- Phone Number
-- Remarks
+Missing identifiers and financial amounts are preserved rather than replaced with fabricated values.
 
----
+## 7. Data Validation
 
-# 6. Project Workflow
+SQL checks were developed to evaluate:
 
-The project follows the workflow below:
+- Missing client identifiers.
+- Missing transaction amounts.
+- Missing interest rates.
+- Missing maturity dates.
+- Financial data conversion.
+- Interest rate ranges.
+- Date representation consistency.
+- Standardized bank classifications.
 
-```
-Raw Dataset
-      │
-      ▼
-Database Creation
-      │
-      ▼
-Data Import
-      │
-      ▼
-Data Cleaning
-      │
-      ▼
-Data Validation
-      │
-      ▼
-Duplicate Detection
-      │
-      ▼
-Duplicate Removal
-      │
-      ▼
-Reporting Views
-      │
-      ▼
-Business Analysis
-      │
-      ▼
-Performance Optimization
-      │
-      ▼
-PostgreSQL Functions
-      │
-      ▼
-Business Reporting
-```
+All 19,120 non-missing maturity dates were converted, with zero representation mismatches in the completed validation check.
 
----
+## 8. Duplicate Detection and Removal
 
-# 7. Data Cleaning
+Duplicate detection was performed using PostgreSQL ROW_NUMBER() across 12 standardized source business fields.
 
-Several cleaning operations were performed to improve data quality.
+Repeated client IDs alone were not considered duplicates.
 
-The process included:
+**Verified results:**
 
-- Handling missing values
-- Standardizing categorical values
-- Identifying invalid email addresses
-- Replacing inconsistent text values
-- Reviewing transaction amounts
-- Reviewing interest rates
-- Standardizing unknown values
-- Preparing the dataset for analysis
+- Original records: 25,500
+- Duplicate rows removed: 502
+- Final records: 24,998
 
-These steps improved consistency while preserving the integrity of the original data.
+## 9. Financial Analysis
 
----
+The final dataset supports analysis of:
 
-# 8. Data Validation
+- Banking transaction activity.
+- Bank-level record distribution.
+- Account portfolio composition.
+- Customer identification completeness.
+- Transaction amount completeness.
+- Loan status distribution.
+- Currency-level financial summaries.
+- Account maturity trends.
 
-Data validation was performed after cleaning to verify dataset quality.
+### Verified Financial KPIs
 
-Validation checks included:
+| KPI | Value |
+|---|---:|
+| Valid transaction amounts | 16,663 |
+| Sum of recorded amounts | 4,170,755,712.00 |
+| Average recorded amount | 250,300.41 |
+| Average interest rate | 6.99% |
 
-- NULL value detection
-- Invalid email identification
-- Missing phone numbers
-- Bank name consistency
-- Account type validation
-- Interest rate verification
-- Loan status verification
-- Currency validation
-- Risk category validation
-- Maturity status validation
+**Important:** Monetary amounts include multiple currencies without foreign-exchange conversion. Combined values should not be interpreted as single-currency financial totals.
 
-The validation process ensures that business reports are based on reliable information.
+## 10. Reusable PostgreSQL Reporting Views
 
----
+The updated reporting layer includes:
 
-# 9. Duplicate Detection and Removal
+- vw_bank_performance_v2
+- vw_account_portfolio_v2
+- vw_data_quality_v2
+- vw_currency_summary_v2
 
-Duplicate records were identified using PostgreSQL window functions.
+These views support reusable SQL reporting and reduce repetitive aggregation logic.
 
-After reviewing duplicate groups, redundant records were removed while preserving valid business information.
+## 11. SQL Business Analysis
 
-### Duplicate Summary
+The project contains 20 business-focused SQL queries covering:
 
-| Metric | Value |
-|---------|-------:|
-| Original Records | 25,500 |
-| Duplicate Records Removed | 503 |
-| Final Records | 24,997 |
+- Executive KPIs
+- Bank performance
+- Customer identification
+- Account portfolio analysis
+- Interest rates
+- Loan statuses
+- Currency distribution
+- Maturity analysis
+- Financial data quality
 
----
+The queries use PostgreSQL aggregation, filtering, conditional calculations, and date functions.
 
-# 10. Reporting Views
+## 12. Query Performance Analysis
 
-To simplify reporting, reusable SQL views were created.
-
-The reporting views provide summarized information for:
-
-- Customers
-- Banks
-- Account Types
-- Currency
-- Risk Categories
-- Loan Status
-- Maturity Status
-
-These views improve reporting efficiency by eliminating repetitive SQL code.
-
----
-
-# 11. Business Analysis
-
-Twenty SQL analysis queries were developed to answer common business questions.
+PostgreSQL query execution was examined using EXPLAIN (ANALYZE, BUFFERS).
 
 The analysis includes:
 
-- Customer distribution
-- Transaction statistics
-- Bank performance
-- Account type analysis
-- Risk analysis
-- Loan status analysis
-- Currency distribution
-- Maturity analysis
-- Monthly trends
-- Executive summary KPIs
+- Sequential scans
+- Index scans
+- Hash aggregation
+- Sorting
+- Query execution time
+- Buffer usage
 
-The results provide meaningful insights into customer behavior and financial performance.
+A measured performance improvement is not claimed without comparative benchmarking.
 
----
+## 13. PostgreSQL Functions
 
-# 12. Performance Optimization
+Five reusable reporting functions support:
 
-Database performance was improved using PostgreSQL indexes.
+- Customer details
+- Bank transaction summaries by currency
+- Data quality reporting
+- Account portfolio reporting
+- Executive KPI reporting
 
-Indexes were created on frequently queried columns including:
+These functions use the final cleaned database table.
 
-- client_id
-- bank_name
-- account_type
-- currency
-- transaction_amount
-- risk_category
-- loan_status
-- maturity_date
+## 14. Project Deliverables
 
-Query execution plans were evaluated using **EXPLAIN ANALYZE** to verify optimization effectiveness.
+- PostgreSQL database schema
+- Raw data import script
+- SQL cleaning and transformation script
+- Data validation queries
+- Duplicate-removal workflow
+- 20 business analysis queries
+- Reusable reporting views
+- Database indexes
+- SQL performance analysis
+- PostgreSQL functions
+- Technical reports and documentation
 
----
+## 15. Conclusion
 
-# 13. PostgreSQL Functions
+The project demonstrates practical SQL data preparation, validation, analytics, and reporting skills.
 
-Reusable PostgreSQL functions were developed to simplify reporting.
+It successfully transformed 25,500 simulated banking records into 24,998 deduplicated analytical records.
 
-These functions support:
-
-- Customer reporting
-- Bank summaries
-- Account summaries
-- Risk reporting
-- Transaction summaries
-
-The use of functions improves code maintainability and promotes SQL reusability.
+The resulting PostgreSQL database supports financial data analysis, bank performance reporting, customer segmentation, and data-quality monitoring.
 
 ---
 
-# 14. Project Deliverables
-
-The completed project includes:
-
-- PostgreSQL Database
-- SQL Database Design
-- CSV Data Import
-- Data Cleaning Scripts
-- Data Validation Scripts
-- Duplicate Removal Scripts
-- Reporting Views
-- 20 Business Analysis Queries
-- Database Indexes
-- Query Performance Analysis
-- PostgreSQL Functions
-- Professional Documentation
-
----
-
-# 15. Conclusion
-
-This project demonstrates a complete SQL-based data analytics workflow using PostgreSQL.
-
-Beginning with raw banking transaction data, the project progresses through data preparation, quality improvement, business analysis, and performance optimization to produce a clean and reliable analytical database.
-
-The techniques demonstrated in this repository reflect practical SQL skills used in real-world analytics environments and provide a strong foundation for business reporting, decision-making, and database development.
-
-The project also serves as a professional portfolio piece showcasing PostgreSQL, SQL development, data analytics, and documentation skills.
-
----
-
-## Author
-
-**Faisal Kader**
-
-SQL Developer • Data Analytics Enthusiast • PostgreSQL • Business Intelligence
-
-Version 1.0.0
+**Author:** Faisal Kader  
+**GitHub:** https://github.com/faisalk8911/banking-data-analytics-postgresql
