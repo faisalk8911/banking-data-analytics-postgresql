@@ -1,178 +1,202 @@
-# Performance Optimization Report
-## End-to-End Banking Data Analytics using PostgreSQL
 
-**Project Version:** 1.0.0
+# PostgreSQL Query Performance Analysis Report
 
----
-
-# Executive Summary
-
-This report documents the performance optimization techniques implemented throughout the Banking Data Analytics project. The objective is to improve query execution speed, reduce database resource consumption, and ensure efficient analytical reporting.
-
-By applying indexing strategies, query optimization techniques, and PostgreSQL performance analysis tools, the project demonstrates best practices for scalable SQL development.
+**Project:** End-to-End Banking Data Analytics with PostgreSQL  
+**Author:** Faisal Kader  
+**Database:** banking_analytics  
+**Tools:** PostgreSQL, SQL, pgAdmin 4
 
 ---
 
-# Project Scope
+## 1. Executive Summary
 
-Performance optimization focused on:
+This report documents PostgreSQL query performance analysis techniques used in the Banking Data Analytics project.
 
-- Database indexing
-- Query execution analysis
-- Reporting optimization
-- PostgreSQL functions
-- Efficient filtering and aggregation
-- SQL best practices
+The objective is to examine query execution plans, understand database processing behavior, and evaluate indexing strategies for financial reporting.
 
----
+The project uses EXPLAIN (ANALYZE, BUFFERS) to inspect execution times, scan operations, aggregation, and buffer utilization.
 
-# Dataset Overview
+Although indexing strategies have been developed, performance improvements have not yet been established through controlled before-and-after benchmarking.
 
-| Metric | Value |
-|---------|-------:|
-| Total Records | 24,997 |
-| SQL Scripts | 11 |
-| Reporting Views | 7 |
-| Analysis Queries | 20 |
-| PostgreSQL Functions | Included |
+## 2. Project Overview
 
----
+| Metric | Result |
+|---|---:|
+| Final cleaned records | 24,998 |
+| SQL modules | 11 |
+| Business analysis queries | 20 |
+| Reporting views | 4 |
+| PostgreSQL reporting functions | 5 |
+| Performance analysis queries | 10 |
 
-# Indexing Strategy
+## 3. Database Indexing Strategy
 
-Indexes were created on frequently queried columns to improve data retrieval speed.
+The project includes index definitions for the final cleaned table, banking_transactions_clean_v2.
 
-| Index Name | Purpose |
-|------------|---------|
-| idx_client_id | Customer lookup |
-| idx_bank_name | Bank reporting |
-| idx_account_type | Account analysis |
-| idx_currency | Currency filtering |
-| idx_transaction_amount | Transaction reporting |
-| idx_risk_category | Risk analysis |
-| idx_loan_status | Loan reporting |
-| idx_maturity_date | Maturity reporting |
+| Indexed Column | Purpose |
+|---|---|
+| client_id | Customer lookup |
+| bank_name | Bank filtering |
+| account_type | Account analysis |
+| currency | Currency filtering |
+| loan_status | Loan status filtering |
+| transaction_amount | Financial amount sorting |
+| maturity_date | Date range filtering |
+| bank_name, currency | Combined bank and currency filtering |
 
----
+Indexes may improve selected queries depending on query selectivity, table size, and PostgreSQL planner estimates.
 
-# Query Performance Analysis
+They also introduce storage and write-maintenance overhead.
 
-Performance testing was conducted using PostgreSQL execution plan tools.
+## 4. PostgreSQL Performance Analysis
 
-## Tools Used
+The project uses:
 
 ```sql
-EXPLAIN
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+    bank_name,
+    COUNT(*) AS total_records,
+    SUM(transaction_amount) AS total_amount
+FROM banking_transactions_clean_v2
+WHERE transaction_amount IS NOT NULL
+GROUP BY bank_name;
 ```
 
-```sql
-EXPLAIN ANALYZE
-```
+This command provides information about:
 
-These tools provide insights into:
-
-- Query execution plan
-- Estimated execution cost
+- Query execution methods
 - Actual execution time
-- Index usage
-- Sequential scans
-- Row processing statistics
+- Planning time
+- Rows processed
+- Rows filtered
+- Shared buffer usage
+- Aggregation operations
+
+## 5. Recorded Query Execution Results
+
+A previously recorded bank aggregation execution plan produced:
+
+| Performance Metric | Recorded Result |
+|---|---:|
+| Planning time | 0.913 ms |
+| Execution time | 8.155 ms |
+| Non-NULL transaction rows processed | 16,663 |
+| Rows removed by filter | 8,335 |
+| Shared buffer hits | 384 |
+
+These figures represent one recorded execution-plan measurement, not a multi-run benchmark.
+
+The values may change depending on hardware, database configuration, caching, and query execution conditions.
+
+## 6. Query Performance Tests
+
+The project includes ten performance analysis queries covering:
+
+1. Customer lookup.
+2. Bank filtering.
+3. Bank and currency filtering.
+4. Maturity date filtering.
+5. Approved loan status filtering.
+6. Top recorded transaction amounts.
+7. Bank-level aggregation.
+8. Average interest rate by bank.
+9. Monthly maturity analysis.
+10. Executive KPI aggregation.
+
+These tests examine different query patterns commonly used in financial analytics.
+
+## 7. Index Usage Considerations
+
+PostgreSQL may select different execution methods, including:
+
+- Sequential Scan
+- Index Scan
+- Bitmap Index Scan
+- HashAggregate
+- GroupAggregate
+- Sort
+
+An index is not necessarily used for every query.
+
+Sequential scans can be efficient when a query processes a large proportion of a relatively small table.
+
+## 8. Reusable Reporting Views
+
+Four reporting views support SQL analytics:
+
+- vw_bank_performance_v2
+- vw_account_portfolio_v2
+- vw_data_quality_v2
+- vw_currency_summary_v2
+
+Standard PostgreSQL views simplify reusable reporting logic.
+
+They do not automatically store query results or guarantee faster execution.
+
+## 9. PostgreSQL Functions
+
+Five reusable reporting functions support:
+
+- Customer details
+- Bank financial summaries by currency
+- Data quality reporting
+- Account portfolio analysis
+- Executive KPI reporting
+
+Functions help organize reusable SQL calculations and reporting logic.
+
+## 10. Performance Benchmarking Limitations
+
+The existing execution-plan results demonstrate performance inspection but do not establish a verified speed improvement.
+
+A controlled optimization assessment should:
+
+1. Record baseline query performance.
+2. Apply an index or SQL optimization.
+3. Repeat the same query under comparable conditions.
+4. Compare execution times and buffer usage.
+5. Evaluate the effect of caching and query planner behavior.
+
+Repeated measurements are preferable to relying on a single execution.
+
+## 11. Recommended Future Enhancements
+
+Potential enhancements include:
+
+- Controlled indexing benchmarks
+- Query performance monitoring
+- Statistics maintenance
+- Selective use of materialized views
+- Automated regression testing
+- Index usage monitoring
+- Review of unnecessary indexes
+
+These improvements should be evaluated based on measured performance and workload requirements.
+
+## 12. Business Value
+
+The project demonstrates practical skills in:
+
+- PostgreSQL query execution analysis
+- Index design
+- SQL performance inspection
+- Financial reporting queries
+- Database statistics interpretation
+- Reusable SQL development
+- Technical documentation
+
+## 13. Conclusion
+
+The PostgreSQL Banking Analytics project demonstrates database performance analysis using a verified dataset of 24,998 cleaned records.
+
+Indexing strategies, execution-plan inspection, and reusable reporting techniques provide a foundation for future performance optimization.
+
+Measured speed improvements should only be reported after comparative benchmarking.
 
 ---
 
-# Performance Improvements
+**Author:** Faisal Kader  
+**Technologies:** PostgreSQL, SQL, pgAdmin 4
 
-The following optimizations were implemented:
-
-- Improved customer search performance.
-- Faster bank-level reporting.
-- Optimized account-type filtering.
-- Faster transaction aggregation.
-- Improved risk category reporting.
-- Efficient loan status analysis.
-- Better sorting and grouping performance.
-
----
-
-# Reporting Optimization
-
-Reporting views were created to simplify complex SQL queries and improve report generation.
-
-Benefits include:
-
-- Reusable SQL logic
-- Reduced query complexity
-- Faster dashboard development
-- Improved report consistency
-- Easier maintenance
-
----
-
-# PostgreSQL Functions
-
-Reusable PostgreSQL functions were developed to encapsulate common business logic.
-
-Advantages include:
-
-- Improved code reusability
-- Consistent calculations
-- Simplified reporting queries
-- Easier maintenance
-
----
-
-# SQL Best Practices Applied
-
-The project follows several SQL development best practices:
-
-- Meaningful naming conventions
-- Modular SQL scripts
-- Reusable reporting views
-- Indexing for frequently queried columns
-- Clean and readable SQL formatting
-- Validation before analysis
-- Separation of data preparation and reporting
-
----
-
-# Business Impact
-
-Performance optimization provides measurable benefits for business reporting:
-
-- Faster report generation
-- Improved dashboard responsiveness
-- Better scalability
-- Reduced database workload
-- Enhanced user experience
-- Reliable executive reporting
-
----
-
-# Recommendations
-
-Future enhancements may include:
-
-- Materialized views
-- Table partitioning
-- Scheduled maintenance
-- Query benchmarking
-- Database configuration tuning
-- Automated performance monitoring
-
----
-
-# Conclusion
-
-Performance optimization is a critical component of any analytics solution.
-
-By implementing indexing strategies, evaluating execution plans, and following SQL best practices, this project demonstrates practical techniques for building efficient, scalable, and maintainable PostgreSQL solutions suitable for business reporting and data analytics.
-
----
-
-## Author
-
-**Faisal Kader**
-
-SQL Developer • Data Analytics Enthusiast • PostgreSQL • Business Intelligence
-
-Version 1.0.0
+**Repository:** https://github.com/faisalk8911/banking-data-analytics-postgresql
