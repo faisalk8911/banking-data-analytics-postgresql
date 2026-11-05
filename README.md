@@ -1,916 +1,427 @@
+
 # End-to-End Banking Data Analytics with PostgreSQL
 
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,50:203A43,100:2C5364&height=220&section=header&text=Banking%20Data%20Analytics&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=End-to-End%20SQL%20Analytics%20Project%20using%20PostgreSQL&descAlignY=58&descSize=18" />
-</p>
+**SQL Data Cleaning | Data Quality | Financial Reporting | PostgreSQL Views | Query Performance Analysis**
 
-<p align="center">
-  <img src="https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/SQL-Advanced-blue" />
-  <img src="https://img.shields.io/badge/Data%20Analytics-Banking-orange" />
-  <img src="https://img.shields.io/badge/License-MIT-green" />
-</p>
-
----
+> **Portfolio case study:** A simulated banking dataset transformed into a validated, analysis-ready SQL reporting table. This project focuses on PostgreSQL and SQL; Power BI dashboards are presented separately.
 
 ## Project Overview
 
-This project demonstrates a complete end-to-end banking data analytics workflow using PostgreSQL.
+This project demonstrates how to profile, standardize, validate, and analyze imperfect banking data using PostgreSQL.
 
-The project starts with a raw banking dataset containing customer, bank, account, transaction, loan, risk, maturity, and contact information. The raw data is imported into PostgreSQL, cleaned, validated, deduplicated, transformed into reporting views, analyzed using business-focused SQL queries, and optimized using indexes and execution plan analysis.
+Starting with 25,500 source records, the updated workflow preserves the raw input, works in a staging table, converts financial and date fields, removes exact duplicates, and exposes cleaned records for banking and account-level reporting.
 
-The goal of this project is to simulate a real-world SQL analytics workflow commonly used by Data Analysts, Business Intelligence Analysts, Reporting Analysts, and SQL Developers in the banking and financial services industry.
+**Verified outcome:** 24,998 cleaned rows after removing 502 duplicate rows. The previous README counts (24,997 / 503) have been corrected based on SQL verification against the rebuilt dataset.
 
-This is not just a collection of SQL queries. It is a structured portfolio project that demonstrates how raw financial data can be transformed into a clean, reliable, and analysis-ready database for business reporting and decision-making.
+## Key Results
 
----
+| Measure | Verified Result |
+|---|---:|
+| Raw records | 25,500 |
+| Staging records | 25,500 |
+| Exact duplicate rows removed | 502 |
+| Final cleaned records | **24,998** |
+| Distinct non-null client IDs | 11,676 |
+| Records with valid transaction amounts | 16,663 |
+| Records without transaction amounts | 8,335 |
+| Sum of available transaction amounts* | 4,170,755,712.00 |
+| Average non-null transaction amount* | 250,300.41 |
+| Average non-null interest rate | 6.99% |
 
-## ⭐ Key Features
+**Currency caveat:** Source records include multiple currencies, including USD, BDT, GBP, and EUR. The aggregate and average above were calculated without foreign-exchange conversion. These are useful SQL consistency metrics, not meaningful single-currency bank-wide financial totals. Production reporting should aggregate by currency or apply documented FX rates.
 
-* 🏦 End-to-End Banking Data Analytics Project
-* 🗄️ PostgreSQL Database Design & Development
-* 📥 CSV Data Import into PostgreSQL
-* 🧹 Data Cleaning & Standardization
-* ✔️ Data Validation & Quality Checks
-* 🔍 Duplicate Detection & Removal
-* 📊 20 Business-Focused SQL Analysis Queries
-* 📈 Reusable SQL Reporting Views
-* ⚡ Query Performance Optimization
-* 🚀 Index Creation for Faster Query Execution
-* ⚙️ Reusable PostgreSQL Functions
-* 📚 Professional Project Documentation
-* 🌐 GitHub Portfolio Ready
+## Business Problem
 
----
+Financial reporting from raw operational records is often complicated by:
 
+- Missing customer identifiers and transaction amounts
+- Inconsistent casing, whitespace, and placeholder values
+- Currency symbols embedded in numeric fields
+- Interest rates stored as text with irregular separators
+- Multiple date formats
+- Duplicate rows, distinct from legitimate repeated client transactions
 
-## 💼 Business Problem
+The objective was to retain legitimate transactions while creating an understandable and repeatable data preparation and reporting process.
 
-Banks generate large volumes of transactional data every day. However, raw operational data is often incomplete, inconsistent, and duplicated, making it difficult to produce accurate business reports and reliable insights.
+## Architecture and Workflow
 
-Business users require clean, validated, and structured data to support:
+```text
+banking_transactions_raw
+25,500 original records
+           |
+           v
+banking_transactions_staging
+25,500 working records
+           |
+           v
+Data Cleaning and Standardization
+- Trim whitespace
+- Convert blanks to NULL
+- Standardize bank and account labels
+- Normalize currency and loan status
+           |
+           v
+Data Type Conversion
+- Transaction amounts to NUMERIC
+- Interest rates to NUMERIC
+- Maturity dates to DATE
+           |
+           v
+Data Validation
+- Missing values
+- Numeric conversion checks
+- Date format checks
+           |
+           v
+Duplicate Detection and Removal
+- ROW_NUMBER()
+- Remove 502 exact duplicates
+- Preserve legitimate repeated client IDs
+           |
+           v
+banking_transactions_clean_v2
+24,998 cleaned records
+           |
+           v
+Business SQL Analytics
+- Bank performance
+- Account portfolio
+- Financial data quality
+           |
+           v
+PostgreSQL Reporting Views
+vw_bank_performance_v2
+           |
+           v
+EXPLAIN (ANALYZE, BUFFERS)
+Query Performance Analysis
+           |
+           v
+Financial Reporting and Insights
+```
 
-* Customer performance reporting
-* Transaction monitoring
-* Risk assessment
-* Loan portfolio analysis
-* Executive decision-making
-* Regulatory and compliance reporting
+The original `banking_transactions` table contained 11,677 rows during the rebuild and was not overwritten. It is a legacy table with a different schema and should not be confused with `banking_transactions_clean_v2`.
 
-This project demonstrates how PostgreSQL can be used to transform raw banking data into a clean, analysis-ready database through data cleaning, validation, duplicate removal, performance optimization, and business-focused SQL reporting.
+## Raw Data Quality Assessment
 
+SQL checks on the 25,500-row original dataset returned:
 
----
+| Data Quality Issue | Records | Approx. Percentage |
+|---|---:|---:|
+| Missing client IDs | 12,726 | 49.9% |
+| Missing transaction amounts | 8,505 | 33.4% |
+| Missing bank names | 4,325 | 17.0% |
+| Missing maturity dates | 6,380 | 25.0% |
 
-## Project Objectives
+Missing data was identified and preserved where appropriate rather than inventing customer identifiers or financial amounts.
 
-The main objectives of this project are to:
+## Data Cleaning and Standardization
 
-* Design and create a PostgreSQL database
-* Import raw banking transaction data from CSV
-* Clean missing, inconsistent, and invalid values
-* Validate the dataset for reporting accuracy
-* Detect and remove duplicate records
-* Create reusable SQL reporting views
-* Perform business-focused SQL analysis
-* Generate key banking KPIs
-* Optimize query performance using indexes
-* Analyze SQL execution plans using `EXPLAIN` and `EXPLAIN ANALYZE`
-* Develop reusable PostgreSQL functions
-* Document the project in a professional GitHub portfolio format
+The cleaning process included:
 
----
+- Trimming whitespace and converting blank strings to SQL `NULL`
+- Standardizing customer and account names
+- Normalizing bank names and assigning `Unknown Bank` for missing values
+- Standardizing currency codes and loan statuses
+- Converting transaction amounts into `NUMERIC(15,2)`
+- Converting interest rates into `NUMERIC(6,2)`
+- Converting maturity dates into PostgreSQL `DATE`
 
-## Dataset Summary
+Interest-rate text containing embedded spaces was interpreted using a documented assumption that those spaces represented decimal separators.
 
-The dataset contains simulated banking customer and transaction records representing common financial operations in commercial banking.
+Three date formats were supported:
 
-### Dataset Statistics
+- `DD-MM-YYYY`
+- `YYYY.MM.DD`
+- `MM/DD/YYYY`
 
-| Metric                    |  Value |
-| ------------------------- | -----: |
-| Original Records          | 25,500 |
-| Final Clean Records       | 24,997 |
-| Duplicate Records Removed |    503 |
-| Unique Clients            | 11,676 |
+## Data Validation Results
 
-### Data Domains
+| Validation Metric | Result |
+|---|---:|
+| Original records preserved in staging | 25,500 |
+| Valid transaction amounts before deduplication | 16,995 |
+| Missing transaction amounts before deduplication | 8,505 |
+| Converted interest rates | 12,600 |
+| Missing interest rates | 12,900 |
+| Unconverted interest rates | 0 |
+| Converted maturity dates | 19,120 |
+| Missing maturity dates | 6,380 |
+| Date representation mismatches | 0 |
 
-The dataset includes the following banking domains:
+These checks helped establish data consistency before final duplicate removal and reporting.
 
-* Customer information
-* Bank information
-* Account information
-* Financial transactions
-* Loan status
-* Interest rates
-* Risk classification
-* Contact information
-* Account maturity status
+## Duplicate Detection and Removal
 
-### Main Columns
+Duplicate records can distort transaction totals, customer counts, and financial reporting.
 
-| Column               | Description                               |
-| -------------------- | ----------------------------------------- |
-| `client_id`          | Unique customer identifier                |
-| `client_name`        | Customer name                             |
-| `bank_name`          | Bank name                                 |
-| `account_type`       | Type of banking account                   |
-| `currency`           | Transaction currency                      |
-| `transaction_amount` | Transaction value                         |
-| `interest_rate`      | Interest rate associated with the account |
-| `risk_category`      | Customer risk classification              |
-| `maturity_date`      | Account maturity date                     |
-| `maturity_status`    | Account maturity status                   |
-| `email`              | Customer email address                    |
-| `phone`              | Customer phone number                     |
-| `loan_status`        | Loan approval status                      |
-| `remarks`            | Additional business remarks               |
+This project uses PostgreSQL window functions to identify duplicate rows while preserving legitimate repeated transactions.
 
----
+### Verified Results
+
+| Metric | Records |
+|---|---:|
+| Original records | 25,500 |
+| Exact duplicate rows removed | 502 |
+| Final cleaned records | 24,998 |
+
+Duplicate identification considered all 12 source business columns after standardization.
+
+Repeated `client_id` values alone were not considered duplicates because a customer may legitimately have multiple accounts or transactions.
+
+## Financial Data Analysis
+
+### Final Banking KPIs
+
+| KPI | Value |
+|---|---:|
+| Clean records | 24,998 |
+| Unique identified clients | 11,676 |
+| Valid transaction amounts | 16,663 |
+| Sum of recorded transaction amounts* | 4,170,755,712.00 |
+| Average recorded transaction amount* | 250,300.41 |
+| Average interest rate | 6.99% |
+
+*Transaction amounts include multiple currencies without FX conversion.*
+
+### Bank Performance Analysis
+
+| Bank | Clean Records | Sum of Recorded Amounts* |
+|---|---:|---:|
+| BOFA | 4,226 | 728,377,576.00 |
+| CITI | 4,214 | 697,919,368.00 |
+| Unknown Bank | 4,240 | 692,871,342.00 |
+| CHASE | 4,145 | 692,329,068.00 |
+| Wells Fargo | 4,014 | 681,074,161.00 |
+| HSBC | 4,159 | 678,184,197.00 |
+
+*These are unconverted mixed-currency sums, not comparable bank revenue or true single-currency transaction volumes.*
+
+The `Unknown Bank` category identifies an opportunity to improve source data completeness.
+
+### Account Portfolio Analysis
+
+SQL queries analyze financial records across:
+
+- Loan accounts
+- Investment accounts
+- Current accounts
+- Savings accounts
+
+The analysis includes transaction record counts, distinct identified clients, valid transaction amounts, and financial aggregations by account type.
+
+Record counts are not automatically equivalent to unique customer counts.
+
+## Reusable PostgreSQL Reporting Views
+
+A reusable bank performance view was created to simplify financial reporting.
+
+```sql
+CREATE OR REPLACE VIEW vw_bank_performance_v2 AS
+SELECT
+    bank_name,
+    COUNT(*) AS total_records,
+    COUNT(
+        DISTINCT NULLIF(TRIM(client_id), '')
+    ) AS unique_clients,
+    ROUND(SUM(transaction_amount), 2)
+        AS total_transaction_amount,
+    ROUND(AVG(transaction_amount), 2)
+        AS average_transaction_amount,
+    ROUND(AVG(interest_rate), 2)
+        AS average_interest_rate
+FROM banking_transactions_clean_v2
+GROUP BY bank_name;
+```
+
+### Execute the Reporting View
+
+```sql
+SELECT *
+FROM vw_bank_performance_v2
+ORDER BY total_transaction_amount DESC;
+```
+
+The view supports repeatable SQL reporting without rewriting aggregation queries.
+
+Monetary aggregations retain the mixed-currency limitation described above.
+
+## SQL Query Performance Analysis
+
+PostgreSQL execution performance was inspected using:
+
+```sql
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+    bank_name,
+    COUNT(*) AS total_records,
+    ROUND(SUM(transaction_amount), 2)
+        AS total_transaction_amount
+FROM banking_transactions_clean_v2
+WHERE transaction_amount IS NOT NULL
+GROUP BY bank_name
+ORDER BY total_transaction_amount DESC;
+```
+
+### Execution Plan Results
+
+| Metric | Result |
+|---|---:|
+| Execution time | 8.155 ms |
+| Planning time | 0.913 ms |
+| Non-null transaction rows examined | 16,663 |
+| Rows excluded by filter | 8,335 |
+| Shared buffer hits | 384 |
+
+The execution plan included:
+
+- Sequential scanning
+- Hash aggregation
+- Sorting
+- Buffer utilization analysis
+- Query planning and execution time measurements
+
+These results demonstrate execution-plan analysis, not a verified performance improvement. Any claim of indexing-related speedup requires controlled before-and-after benchmarking.
+
+## Sample SQL Queries
+
+### Verify the Final Cleaned Dataset
+
+```sql
+SELECT
+    COUNT(*) AS final_records,
+    COUNT(
+        DISTINCT NULLIF(TRIM(client_id), '')
+    ) AS unique_clients,
+    COUNT(transaction_amount) AS non_null_amounts,
+    ROUND(SUM(transaction_amount), 2)
+        AS sum_of_recorded_amounts,
+    ROUND(AVG(transaction_amount), 2)
+        AS avg_recorded_amount,
+    ROUND(AVG(interest_rate), 2)
+        AS avg_interest_rate
+FROM banking_transactions_clean_v2;
+```
+
+### Data Quality Analysis by Bank
+
+```sql
+SELECT
+    COALESCE(
+        NULLIF(TRIM(bank_name), ''),
+        'Unknown Bank'
+    ) AS bank_name,
+    COUNT(*) AS total_records,
+    COUNT(*) FILTER (
+        WHERE client_id IS NULL
+    ) AS missing_client_ids,
+    COUNT(*) FILTER (
+        WHERE transaction_amount IS NULL
+    ) AS missing_amounts,
+    ROUND(
+        100.0 * COUNT(*) FILTER (
+            WHERE transaction_amount IS NULL
+        ) / NULLIF(COUNT(*), 0),
+        2
+    ) AS missing_amount_pct
+FROM banking_transactions_clean_v2
+GROUP BY 1
+ORDER BY missing_amount_pct DESC;
+```
 
 ## Repository Structure
 
 ```text
-Banking_Data_Analytics_SQL_Project/
-│
-├── README.md
-├── LICENSE
-├── .gitignore
-│
-├── data/
-│   ├── raw/
-│   │   └── banking_data_raw.csv
-│   │
-│   └── cleaned/
-│       └── banking_data_cleaned.csv
-│
-├── sql/
-│   ├── 01_database_setup.sql
-│   ├── 02_create_table.sql
-│   ├── 03_import_data.sql
-│   ├── 04_data_cleaning.sql
-│   ├── 05_data_validation.sql
-│   ├── 06_duplicate_removal.sql
-│   ├── 07_reporting_views.sql
-│   ├── 08_analysis_queries.sql
-│   ├── 09_indexes.sql
-│   ├── 10_performance_optimization.sql
-│   └── 11_postgresql_functions.sql
-│
-├── docs/
-│   ├── 01_Project_Documentation.md
-│   ├── 02_Data_Dictionary.md
-│   ├── 03_Data_Cleaning_Report.md
-│   ├── 04_SQL_Query_Results.md
-│   ├── 05_Project_Summary.md
-│   ├── 06_Performance_Optimization_Report.md
-│   └── CHANGELOG.md
-│
-├── reports/
-│   ├── 01_Executive_Report.md
-│   ├── 02_Data_Quality_Report.md
-│   ├── 03_Customer_Analysis_Report.md
-│   ├── 04_Bank_Performance_Report.md
-│   ├── 05_Risk_Analysis_Report.md
-│   ├── 06_Loan_Status_Report.md
-│   └── 07_Performance_Optimization_Report.md
-│
-├── images/
-│   ├── project-banner.png
-│   ├── workflow-diagram.png
-│   ├── database-architecture.png
-│   ├── repository-structure.png
-│   ├── performance-analysis.png
-│   ├── pgadmin/
-│   │   ├── database.png
-│   │   ├── table.png
-│   │   ├── indexes.png
-│   │   └── explain-analyze.png
-│   │
-│   └── query-results/
-│       ├── query01.png
-│       ├── query02.png
-│       ├── query03.png
-│       ├── ...
-│       └── query20.png
-│
-└── assets/
-    ├── project-logo.png
-    ├── github-social-preview.png
-    └── icons/
-
----
-
-## Project Notes
-
-* All SQL queries are organized into separate SQL files inside the `sql/` folder.
-* The README provides the project overview, workflow, selected sample queries, business KPIs, and documentation structure.
-* Screenshots, dashboard previews, and additional prepared materials will be added in future updates.
-* The final repository link will be updated once the GitHub repository name is confirmed.
-
----
-
-## Project Workflow
-
-The project follows a structured analytics workflow used in real-world SQL and business intelligence projects.
-
-```text
-Raw Banking Dataset
-        │
-        ▼
-Database Creation
-        │
-        ▼
-CSV Data Import
-        │
-        ▼
-Data Cleaning
-        │
-        ▼
-Data Validation
-        │
-        ▼
-Duplicate Detection and Removal
-        │
-        ▼
-Reporting View Creation
-        │
-        ▼
-Business Analysis
-        │
-        ▼
-Indexing and Query Optimization
-        │
-        ▼
-PostgreSQL Function Development
-        │
-        ▼
-Business Reporting
+banking-data-analytics-postgresql/
+|
+|-- README.md
+|-- LICENSE
+|
+|-- data/
+|   |-- raw/
+|   |-- cleaned/
+|
+|-- sql/
+|   |-- 01_database_setup.sql
+|   |-- 02_create_table.sql
+|   |-- 03_import_data.sql
+|   |-- 04_data_cleaning.sql
+|   |-- 05_data_validation.sql
+|   |-- 06_duplicate_removal.sql
+|   |-- 07_reporting_views.sql
+|   |-- 08_analysis_queries.sql
+|   |-- 09_indexes.sql
+|   |-- 10_performance_optimization.sql
+|   |-- 11_stored_procedures.sql
+|
+|-- docs/
+|
+|-- reports/
+|
+|-- images/
 ```
 
----
-
-## Database Architecture
-
-The project is built around one core transactional table in PostgreSQL.
-
-| Table                  | Description                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------ |
-| `banking_transactions` | Stores customer, account, transaction, loan, risk, maturity, and contact information |
-
-Although the project uses one main table, the SQL workflow demonstrates practical analytics operations such as data cleaning, validation, duplicate handling, aggregation, reporting views, indexing, execution plan analysis, and reusable function development.
-
----
-
-## Database Design Approach
-
-The current project uses a central analytics table called `banking_transactions`.
-
-This approach is useful for SQL analytics projects because it keeps the workflow simple, focused, and easy to analyze. It is suitable for data cleaning, validation, aggregation, reporting views, KPI generation, and dashboard preparation.
-
-### Current Analytics Table
-
-| Table                  | Description                                                                                                        |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `banking_transactions` | Stores customer, bank, account, transaction, loan, risk, maturity, and contact information in one analytical table |
-
-### Recommended Production-Level Design
-
-For a more advanced real-world banking system, the database could be normalized into multiple related tables.
-
-| Table           | Description                                                       |
-| --------------- | ----------------------------------------------------------------- |
-| `customers`     | Stores customer details such as client ID, name, email, and phone |
-| `banks`         | Stores bank names and bank-level information                      |
-| `accounts`      | Stores account type, currency, maturity date, and maturity status |
-| `transactions`  | Stores transaction amount and transaction-related details         |
-| `loans`         | Stores loan status and loan-related information                   |
-| `risk_profiles` | Stores customer risk categories and risk classification data      |
-
-### Suggested Entity Relationship Structure
-
-```text
-customers
-    │
-    ├── accounts
-    │       │
-    │       └── transactions
-    │
-    ├── loans
-    │
-    └── risk_profiles
-
-banks
-    │
-    └── accounts
-```
-
-### Why This Design Matters
-
-A normalized design would improve:
-
-* Data consistency
-* Data integrity
-* Scalability
-* Relationship management
-* Query flexibility
-* Long-term database maintenance
-
-However, for this portfolio project, the single-table analytics model is still effective because the main goal is to demonstrate SQL analytics, data cleaning, validation, reporting, optimization, and business insight generation.
-
----
-
-## SQL Modules
-
-| SQL File                          | Purpose                                           |
-| --------------------------------- | ------------------------------------------------- |
-| `01_database_setup.sql`           | Creates the PostgreSQL database                   |
-| `02_create_table.sql`             | Creates the main banking transactions table       |
-| `03_import_data.sql`              | Imports the raw CSV dataset                       |
-| `04_data_cleaning.sql`            | Cleans missing, invalid, and inconsistent values  |
-| `05_data_validation.sql`          | Performs data quality checks                      |
-| `06_duplicate_removal.sql`        | Detects and removes duplicate records             |
-| `07_reporting_views.sql`          | Creates reusable reporting views                  |
-| `08_analysis_queries.sql`         | Contains 20 business-focused SQL analysis queries |
-| `09_indexes.sql`                  | Creates indexes for frequently queried columns    |
-| `10_performance_optimization.sql` | Evaluates query performance using execution plans |
-| `11_stored_procedures.sql`        | Creates reusable PostgreSQL functions             |
-
----
-
-## Data Cleaning Process
-
-Raw banking datasets often contain incomplete and inconsistent data. The cleaning process focused on improving data quality while preserving the integrity of the original records.
-
-### Cleaning Tasks Performed
-
-| Task                    | Description                                                      |
-| ----------------------- | ---------------------------------------------------------------- |
-| Missing value handling  | Identified and handled missing values across key columns         |
-| Text standardization    | Standardized bank names, categories, and business fields         |
-| Invalid email detection | Identified invalid email formats                                 |
-| Missing phone handling  | Replaced missing phone numbers with a consistent placeholder     |
-| Unknown bank handling   | Standardized unknown bank values                                 |
-| Missing client IDs      | Preserved missing IDs instead of creating artificial identifiers |
-| Date validation         | Checked maturity dates for consistency                           |
-| Numeric validation      | Verified transaction amounts and interest rates                  |
-
----
-
-## Data Validation
-
-After cleaning, validation checks were performed to confirm that the dataset was suitable for business analysis and reporting.
-
-Validation checks included:
-
-* NULL value assessment
-* Invalid email detection
-* Missing phone number detection
-* Bank name consistency checks
-* Account type validation
-* Loan status validation
-* Risk category review
-* Interest rate validation
-* Transaction amount verification
-* Maturity date validation
-
-These checks help ensure that the final dataset is reliable for KPI reporting, business analysis, and dashboard development.
-
----
-
-## Duplicate Detection and Removal
-
-Duplicate records can distort customer counts, transaction totals, loan summaries, risk analysis, and financial KPIs. A duplicate detection and removal process was implemented using PostgreSQL logic.
-
-### Duplicate Removal Summary
-
-| Metric                    |  Value |
-| ------------------------- | -----: |
-| Original Records          | 25,500 |
-| Duplicate Records Removed |    503 |
-| Final Clean Records       | 24,997 |
-
-The process removed duplicate records while preserving valid transactional data.
-
----
-
-## Reporting Views
-
-Reusable SQL views were created to simplify reporting and reduce repetitive query writing.
-
-| View                     | Purpose                            |
-| ------------------------ | ---------------------------------- |
-| `vw_customer_summary`    | Customer-level reporting           |
-| `vw_bank_summary`        | Bank performance reporting         |
-| `vw_account_summary`     | Account type analysis              |
-| `vw_currency_summary`    | Currency distribution reporting    |
-| `vw_risk_summary`        | Risk category analysis             |
-| `vw_loan_status_summary` | Loan approval and status reporting |
-| `vw_maturity_summary`    | Account maturity reporting         |
-
-These views make the database easier to use for dashboards, reports, and business analysis.
-
----
-
-## Business Analysis
-
-The project includes 20 business-focused SQL queries designed to answer realistic banking analytics questions.
-
-The analysis covers:
-
-* Overall banking performance
-* Customer distribution
-* Transaction analysis
-* Bank performance
-* Account type analysis
-* Interest rate analysis
-* Currency distribution
-* Risk segmentation
-* Loan status analysis
-* Account maturity analysis
-* Monthly account trends
-* Executive KPI reporting
-
----
-
-## Sample SQL Query Preview
-
-All full SQL queries are stored in separate `.sql` files inside the `sql/` folder. Below are selected examples that show the type of SQL logic used in the project.
-
-### 1. Find Duplicate Records
-
-```sql
-WITH duplicate_records AS (
-    SELECT
-        *,
-        ROW_NUMBER() OVER (
-            PARTITION BY client_id, bank_name, account_type, transaction_amount, maturity_date
-            ORDER BY client_id
-        ) AS row_num
-    FROM banking_transactions
-)
-SELECT *
-FROM duplicate_records
-WHERE row_num > 1;
-```
-
-This query uses a window function to detect duplicate banking records based on key business columns.
-
-### 2. Total Transaction Amount by Bank
-
-```sql
-SELECT
-    bank_name,
-    COUNT(*) AS total_customers,
-    SUM(transaction_amount) AS total_transaction_amount,
-    ROUND(AVG(transaction_amount), 2) AS average_transaction_amount
-FROM banking_transactions
-GROUP BY bank_name
-ORDER BY total_transaction_amount DESC;
-```
-
-This query compares bank performance based on customer count and transaction volume.
-
-### 3. High-Risk Customers by Bank
-
-```sql
-SELECT
-    bank_name,
-    COUNT(*) AS high_risk_customers
-FROM banking_transactions
-WHERE risk_category = 'High'
-GROUP BY bank_name
-ORDER BY high_risk_customers DESC;
-```
-
-This query supports risk analysis by identifying banks with the highest number of high-risk customers.
-
-### 4. Loan Status Distribution
-
-```sql
-SELECT
-    loan_status,
-    COUNT(*) AS total_customers,
-    ROUND(
-        COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (),
-        2
-    ) AS percentage
-FROM banking_transactions
-GROUP BY loan_status
-ORDER BY total_customers DESC;
-```
-
-This query shows the distribution of approved, rejected, pending, and unknown loan statuses.
-
-### 5. Query Performance Analysis
-
-```sql
-EXPLAIN ANALYZE
-SELECT
-    bank_name,
-    SUM(transaction_amount) AS total_transaction_amount
-FROM banking_transactions
-WHERE risk_category = 'High'
-GROUP BY bank_name
-ORDER BY total_transaction_amount DESC;
-```
-
-This query is used to review the execution plan, measure query performance, and evaluate whether indexes improve reporting speed.
-
----
-
-## Key Business KPIs
-
-| KPI                        |            Value |
-| -------------------------- | ---------------: |
-| Total Clean Records        |           24,997 |
-| Unique Clients             |           11,676 |
-| Total Transaction Amount   | 4,170,755,712.00 |
-| Average Transaction Amount |       250,300.41 |
-| Highest Transaction Amount |       499,972.00 |
-| Lowest Transaction Amount  |         1,049.00 |
-| Average Interest Rate      |            6.99% |
-
----
-
-## Bank Performance Insights
-
-### Customer Distribution by Bank
-
-| Bank         | Customers |
-| ------------ | --------: |
-| Unknown Bank |     4,240 |
-| BOFA         |     4,226 |
-| CITI         |     4,214 |
-| HSBC         |     4,159 |
-| CHASE        |     4,144 |
-| Wells Fargo  |     4,014 |
-
-### Total Transaction Amount by Bank
-
-| Bank         | Total Transaction Amount |
-| ------------ | -----------------------: |
-| BOFA         |           728,377,576.00 |
-| CITI         |           697,919,368.00 |
-| Unknown Bank |           692,871,342.00 |
-| CHASE        |           692,329,068.00 |
-| Wells Fargo  |           681,074,161.00 |
-| HSBC         |           678,184,197.00 |
-
-### Average Interest Rate by Bank
-
-| Bank         | Average Interest Rate |
-| ------------ | --------------------: |
-| BOFA         |                 7.08% |
-| Wells Fargo  |                 6.99% |
-| CITI         |                 6.98% |
-| CHASE        |                 6.98% |
-| Unknown Bank |                 6.97% |
-| HSBC         |                 6.95% |
-
----
-
-## Account Analysis
-
-### Customer Distribution by Account Type
-
-| Account Type | Customers |
-| ------------ | --------: |
-| Loan         |     6,357 |
-| Current      |     6,217 |
-| Investment   |     6,213 |
-| Savings      |     6,210 |
-
-### Transaction Amount by Account Type
-
-| Account Type | Total Transaction Amount |
-| ------------ | -----------------------: |
-| Loan         |         1,053,743,923.00 |
-| Investment   |         1,051,150,974.00 |
-| Current      |         1,035,398,895.00 |
-| Savings      |         1,030,461,920.00 |
-
-### Average Transaction Amount by Account Type
-
-| Account Type | Average Transaction Amount |
-| ------------ | -------------------------: |
-| Current      |                 252,968.21 |
-| Savings      |                 251,148.41 |
-| Investment   |                 249,146.95 |
-| Loan         |                 248,056.48 |
-
----
-
-## Risk Analysis
-
-### Customer Distribution by Risk Category
-
-| Risk Category | Customers |
-| ------------- | --------: |
-| Unknown       |     8,334 |
-| High          |     6,689 |
-| Medium        |     6,623 |
-| Low           |     3,351 |
-
-### High-Risk Customers by Bank
-
-| Bank         | High-Risk Customers |
-| ------------ | ------------------: |
-| BOFA         |               1,160 |
-| CITI         |               1,143 |
-| Wells Fargo  |               1,115 |
-| CHASE        |               1,114 |
-| Unknown Bank |               1,085 |
-| HSBC         |               1,072 |
-
----
-
-## Loan Analysis
-
-| Loan Status | Customers |
-| ----------- | --------: |
-| Rejected    |     6,300 |
-| Pending     |     6,256 |
-| Approved    |     6,224 |
-| Unknown     |     6,217 |
-
----
-
-## Currency Distribution
-
-| Currency | Accounts |
-| -------- | -------: |
-| Unknown  |    5,023 |
-| BDT      |    5,014 |
-| EUR      |    5,004 |
-| GBP      |    5,000 |
-| USD      |    4,956 |
-
----
-
-## Account Maturity Analysis
-
-| Maturity Status | Accounts |
-| --------------- | -------: |
-| Expired         |   18,746 |
-| Unknown         |    6,251 |
-
----
-
-## Dashboard / Reporting Preview
-
-This project is designed to support business intelligence reporting and dashboard development.
-
-Although the main focus of this project is SQL and PostgreSQL, the cleaned dataset and reporting views can be used to create dashboards in tools such as Power BI, Tableau, Excel, or Looker Studio.
-
-Screenshots and dashboard previews will be added in future updates.
-
-### Suggested Dashboard Pages
-
-| Dashboard Page      | Description                                                                                                             |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Executive Overview  | Displays total records, unique clients, total transaction amount, average transaction amount, and average interest rate |
-| Bank Performance    | Compares customer count, transaction volume, and average interest rate by bank                                          |
-| Account Analysis    | Shows customer distribution and transaction volume by account type                                                      |
-| Risk Analysis       | Highlights high-risk customers, unknown risk records, and risk distribution by bank                                     |
-| Loan Analysis       | Displays approved, rejected, pending, and unknown loan statuses                                                         |
-| Currency Analysis   | Shows account distribution by transaction currency                                                                      |
-| Data Quality Report | Tracks duplicate records, missing values, unknown categories, and invalid contact information                           |
-
-### Main Dashboard KPIs
-
-| KPI                        |            Value |
-| -------------------------- | ---------------: |
-| Total Clean Records        |           24,997 |
-| Unique Clients             |           11,676 |
-| Duplicate Records Removed  |              503 |
-| Total Transaction Amount   | 4,170,755,712.00 |
-| Average Transaction Amount |       250,300.41 |
-| Highest Transaction Amount |       499,972.00 |
-| Lowest Transaction Amount  |         1,049.00 |
-| Average Interest Rate      |            6.99% |
-
-This reporting structure helps business users quickly understand banking performance, customer segmentation, loan distribution, transaction activity, and data quality issues.
-
----
-
-## Performance Optimization
-
-Indexes were created on frequently queried columns to improve filtering, sorting, grouping, and reporting performance.
-
-### Indexed Columns
-
-* `client_id`
-* `bank_name`
-* `account_type`
-* `currency`
-* `transaction_amount`
-* `loan_status`
-* `maturity_date`
-* `risk_category`
-
-### Performance Analysis Techniques Used
-
-* `EXPLAIN`
-* `EXPLAIN ANALYZE`
-* Query cost evaluation
-* Execution plan review
-* Index utilization analysis
-
-These techniques help identify slow queries, understand how PostgreSQL executes SQL statements, and improve database performance.
-
----
-
-## PostgreSQL Functions
-
-Reusable PostgreSQL functions were created to simplify reporting and reduce repetitive SQL logic.
-
-The functions support:
-
-* Customer reporting
-* Bank summaries
-* Account summaries
-* Risk reporting
-* Transaction summaries
-
-Using functions improves maintainability and makes the SQL project more modular.
-
----
-
-## Executive Business Insights
-
-The completed analysis generated several useful insights from the banking dataset:
-
-* The cleaned dataset contains 24,997 valid records after removing 503 duplicates.
-* The dataset includes 11,676 unique clients.
-* Total simulated transaction volume is over 4.17 billion.
-* BOFA generated the highest total transaction amount.
-* Unknown Bank has the largest number of customer records, showing a data quality improvement opportunity.
-* Loan accounts represent the largest account segment.
-* 6,689 customers are classified as High Risk.
-* 8,334 customers have Unknown Risk classification, highlighting another data quality issue.
-* Transaction activity is relatively balanced across major banks.
-* SQL views and functions make the reporting workflow reusable and easier to maintain.
-
----
-
-## Skills Demonstrated
-
-### SQL
-
-* Data querying
-* Aggregate functions
-* Filtering and sorting
-* `CASE` expressions
-* Window functions
-* Common Table Expressions
-* `GROUP BY` and `HAVING`
-* Views
-* Indexes
-* PostgreSQL functions
-* Query optimization
-
-### Database Development
-
-* PostgreSQL database setup
-* Table creation
-* CSV data import
-* Data cleaning
-* Data validation
-* Duplicate removal
-* Index creation
-* Execution plan analysis
-* Performance tuning
-
-### Data Analytics
-
-* Data transformation
-* Data quality assessment
-* KPI reporting
-* Banking analytics
-* Customer segmentation
-* Risk analysis
-* Loan analysis
-* Business reporting
-
-### Professional Tools
-
-* PostgreSQL 16
-* pgAdmin 4
-* SQL
-* CSV
-* Git
-* GitHub
-
----
-
-## Technologies Used
-
-| Technology    | Purpose                                          |
-| ------------- | ------------------------------------------------ |
-| PostgreSQL 16 | Relational database management system            |
-| SQL           | Data querying, cleaning, analysis, and reporting |
-| pgAdmin 4     | Database administration and query execution      |
-| CSV           | Source data format                               |
-| Git           | Version control                                  |
-| GitHub        | Project hosting and documentation                |
-
----
-
-## Getting Started
-
-### Prerequisites
-
-Install the following tools before running the project:
-
-* PostgreSQL 16 or later
-* pgAdmin 4
-* Git
-
-### Clone the Repository
-
-```bash
-git clone
-https://github.com/faisalk8911/banking-data-analytics-postgresql.git
-```
-
-
-
-### Run the SQL Scripts
-
-Execute the SQL scripts in the following order:
-
-```text
-01_database_setup.sql
-02_create_table.sql
-03_import_data.sql
-04_data_cleaning.sql
-05_data_validation.sql
-06_duplicate_removal.sql
-07_reporting_views.sql
-08_analysis_queries.sql
-09_indexes.sql
-10_performance_optimization.sql
-11_stored_procedures.sql
-```
-
----
-
-## Project Outcomes
-
-By completing this project, the raw banking dataset was transformed into a clean, structured, and analysis-ready PostgreSQL database.
-
-The project successfully:
-
-* Imported raw banking data into PostgreSQL
-* Cleaned and standardized inconsistent records
-* Validated data quality
-* Removed duplicate records
-* Created reusable SQL reporting views
-* Generated banking KPIs and business insights
-* Improved query performance using indexes
-* Analyzed SQL execution plans
-* Built reusable PostgreSQL functions
-* Produced professional project documentation for GitHub and portfolio use
-
----
+### Reproducibility Note
+
+Some existing SQL modules were originally written for the legacy `banking_transactions` schema.
+
+The verified rebuild uses:
+
+- `banking_transactions_raw`
+- `banking_transactions_staging`
+- `banking_transactions_clean_v2`
+
+The legacy scripts still require synchronization before this repository can be described as fully reproducible from a fresh database.
+
+The CSV-import example also contains a placeholder path that must be replaced or parameterized.
+
+## Technologies and Skills
+
+- PostgreSQL
+- SQL
+- pgAdmin 4
+- Data Cleaning
+- Data Validation
+- Data Transformation
+- Financial Data Analysis
+- SQL Reporting
+- Common Table Expressions
+- Window Functions
+- Conditional Aggregation
+- Regular Expressions
+- PostgreSQL Reporting Views
+- Query Execution Plan Analysis
+- Git and GitHub
+
+## Portfolio Deliverables
+
+The separate Upwork portfolio includes:
+
+1. Banking Data Analytics Workflow
+2. Bank Performance SQL Analysis
+3. Financial Risk and Data Quality Analysis
+4. Account Portfolio Analysis
+5. PostgreSQL Reporting View
+6. SQL Query Performance Analysis
+7. Executive Financial Analysis Report
+
+These demonstrate the transformation of raw financial records into structured SQL analytics and reusable financial reporting.
 
 ## Future Improvements
 
-Possible future enhancements include:
+- Align legacy SQL scripts with the rebuilt database workflow
+- Publish a fully reproducible SQL cleaning pipeline
+- Add automated data-quality tests
+- Add currency-aware financial reporting
+- Benchmark indexing and query-performance improvements
+- Expand the relational database architecture if required
 
-* Adding project screenshots and query result previews
-* Adding dashboard screenshots after Power BI or Excel dashboard development
-* Updating the final GitHub repository URL
-* Adding more prepared documentation files inside the `docs/` folder
-* Creating a normalized database schema with separate customer, bank, account, transaction, loan, and risk tables
-* Automating the ETL process using Python
-* Adding automated data quality checks
-* Deploying the PostgreSQL database to a cloud platform
-* Creating a REST API for reporting access
-* Expanding the project into a data warehouse model
-* Adding customer segmentation using machine learning
+## License and Attribution
 
----
+This project uses a simulated banking dataset for educational and portfolio demonstration purposes.
 
-## License
+The repository is released under its existing license.
 
-This project is licensed under the MIT License.
+**Author:** Faisal Kader
 
----
-
-## Author
-
-**Faisal Kader**
-SQL Developer | Data Analytics Enthusiast | PostgreSQL | Business Intelligence
-
-GitHub: `https://github.com/faisalk8911`
-
----
-
-## Acknowledgements
-
-This project was created as a portfolio project to demonstrate practical SQL, PostgreSQL, and data analytics skills using a realistic banking dataset.
-
-It showcases the complete process of transforming raw banking data into a clean analytical database with reporting, optimization, and business insight generation.
+**GitHub:** https://github.com/faisalk8911/banking-data-analytics-postgresql
