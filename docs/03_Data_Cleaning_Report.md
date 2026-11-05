@@ -1,168 +1,120 @@
-# Data Cleaning Report
-## End-to-End Banking Data Analytics using PostgreSQL
 
-**Version:** 1.0.0
+# Banking Data Cleaning and Validation Report
 
----
-
-# 1. Purpose
-
-The purpose of this document is to describe the data cleaning process applied to the raw banking dataset before performing analysis.
-
-High-quality data is essential for accurate reporting, business intelligence, and decision-making. This report documents the cleaning steps used to improve the consistency, reliability, and usability of the dataset.
+**Project:** End-to-End Banking Data Analytics using PostgreSQL  
+**Author:** Faisal Kader  
+**Database:** banking_analytics  
+**Source:** Simulated Banking Dataset
 
 ---
 
-# 2. Initial Dataset Summary
+## 1. Executive Summary
 
-| Metric | Value |
-|---------|-------:|
-| Original Records | 25,500 |
-| Final Records | 24,997 |
-| Duplicate Records Removed | 503 |
-| Unique Clients | 11,676 |
+This project demonstrates a structured SQL-based data cleaning workflow using PostgreSQL.
 
----
+The original dataset contained 25,500 banking records with missing values, inconsistent formats, and duplicate transactions.
 
-# 3. Data Quality Issues Identified
+After data standardization, financial data conversion, validation, and duplicate removal, the final cleaned dataset contains 24,998 records.
 
-During the initial review, the following issues were identified:
+## 2. Verified Dataset Summary
 
-- Missing values
-- Duplicate records
-- Inconsistent categorical values
-- Unknown bank names
-- Missing client IDs
-- Invalid email addresses
-- Missing phone numbers
-- Inconsistent text formatting
+| Metric | Result |
+|---|---:|
+| Original records | 25,500 |
+| Staging records | 25,500 |
+| Duplicate rows removed | 502 |
+| Final cleaned records | 24,998 |
+| Unique identified clients | 11,676 |
+| Valid final transaction amounts | 16,663 |
+| Missing final transaction amounts | 8,335 |
 
-These issues were addressed before business analysis.
+## 3. Initial Data Quality Assessment
 
----
+| Issue | Raw Records Affected |
+|---|---:|
+| Missing client IDs | 12,726 |
+| Missing transaction amounts | 8,505 |
+| Missing bank names | 4,325 |
+| Missing maturity dates | 6,380 |
 
-# 4. Cleaning Activities
+Missing values were preserved where the source information was unavailable.
 
-## 4.1 Missing Values
+## 4. Data Cleaning Activities
 
-Missing values were reviewed across all columns.
+### Text Standardization
 
-Actions included:
+- Removed unnecessary leading and trailing spaces.
+- Converted empty strings to SQL NULL.
+- Standardized bank names.
+- Standardized account types and loan statuses.
+- Normalized currency codes.
+- Assigned Unknown Bank to missing bank names.
 
-- Preserving NULL client IDs where source data was unavailable.
-- Standardizing missing categorical values using **"Unknown"** where appropriate.
-- Keeping missing business data unchanged when it represented genuine unknown information.
+### Financial Data Conversion
 
----
+Transaction amounts were converted from formatted text into NUMERIC(15,2).
 
-## 4.2 Standardization
+Interest rates were converted into NUMERIC(6,2), interpreting embedded spaces as decimal separators under the documented source-format assumption.
 
-Categorical fields were standardized to ensure consistent reporting.
+### Date Conversion
 
-Examples include:
+Converted maturity dates from three formats:
 
-- Bank names
-- Account types
-- Loan status
-- Risk categories
-- Maturity status
-- Currency values
+- DD-MM-YYYY
+- YYYY.MM.DD
+- MM/DD/YYYY
 
-This prevents duplicate categories caused by inconsistent spelling or formatting.
+All 19,120 non-missing dates were converted, with zero representation mismatches in the validation check.
 
----
+## 5. Duplicate Detection
 
-## 4.3 Email Validation
+PostgreSQL ROW_NUMBER() was used to identify duplicate records across the 12 standardized source business fields.
 
-Customer email addresses were reviewed.
+Repeated client IDs alone were not treated as duplicate transactions.
 
-Invalid or missing email values were identified and flagged for reporting purposes rather than removed.
+**Verified result:**
 
----
+25,500 original records - 502 duplicate rows = 24,998 cleaned records.
 
-## 4.4 Phone Number Review
+## 6. Final Financial Data Summary
 
-Phone numbers were reviewed for missing values and formatting consistency.
+| Metric | Verified Value |
+|---|---:|
+| Final records | 24,998 |
+| Unique identified clients | 11,676 |
+| Valid transaction amounts | 16,663 |
+| Sum of recorded transaction amounts | 4,170,755,712.00 |
+| Average recorded transaction amount | 250,300.41 |
+| Average interest rate | 6.99% |
 
-Missing values were retained where no valid replacement existed.
+**Important:** Transaction amounts include multiple currencies without foreign-exchange conversion. Combined monetary values should not be interpreted as single-currency financial totals.
 
----
+## 7. PostgreSQL Tables
 
-## 4.5 Duplicate Detection
+| Table | Purpose |
+|---|---|
+| banking_transactions_raw | Preserve original data |
+| banking_transactions_staging | Data cleaning and conversion |
+| banking_transactions_clean_v2 | Final reporting dataset |
 
-Duplicate records were identified using PostgreSQL window functions.
+## 8. Business Value
 
-The duplicate detection process compared records with matching business attributes while preserving one valid record from each duplicate group.
+The completed workflow demonstrates:
 
----
+- SQL data profiling and quality assessment
+- Text and financial data standardization
+- Duplicate identification and removal
+- Preservation of legitimate transactions
+- Reusable reporting datasets
+- Financial reporting and data-quality monitoring
 
-## 4.6 Duplicate Removal
+## 9. Conclusion
 
-After verification:
+The PostgreSQL workflow transformed 25,500 raw banking records into 24,998 deduplicated analytical records.
 
-| Metric | Value |
-|---------|-------:|
-| Duplicate Records Removed | 503 |
-| Final Dataset | 24,997 |
-
-The cleaned dataset now contains unique analytical records suitable for reporting.
-
----
-
-# 5. Validation After Cleaning
-
-After completing the cleaning process, validation checks confirmed:
-
-- No unnecessary duplicate records remain.
-- Categorical values are standardized.
-- Transaction amounts remain unchanged.
-- Interest rates remain consistent.
-- Loan status values are valid.
-- Risk categories are standardized.
-- Currency values are consistent.
+The final dataset supports SQL-based bank performance analysis, account portfolio reporting, customer segmentation, and data-quality monitoring.
 
 ---
 
-# 6. Benefits of Data Cleaning
-
-The cleaning process improved:
-
-- Data consistency
-- Reporting accuracy
-- Customer segmentation
-- Financial analysis
-- Risk reporting
-- Query reliability
-- Business intelligence
-
----
-
-# 7. Impact on Business Reporting
-
-A clean dataset enables:
-
-- Accurate KPI calculations
-- Reliable customer counts
-- Correct transaction summaries
-- Better risk assessment
-- Consistent executive reporting
-
-Without proper cleaning, business reports may contain misleading or duplicated information.
-
----
-
-# 8. Conclusion
-
-The data cleaning process transformed the raw banking dataset into a reliable, standardized, and analysis-ready database.
-
-The cleaned dataset forms the foundation for all subsequent SQL analysis, reporting views, performance optimization, and business insights presented in this project.
-
----
-
-## Author
-
-**Faisal Kader**
-
-SQL Developer • Data Analytics Enthusiast • PostgreSQL • Business Intelligence
-
-Version 1.0.0
+**Author:** Faisal Kader  
+**Tools:** PostgreSQL, SQL, pgAdmin 4, GitHub
