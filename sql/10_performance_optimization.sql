@@ -1,192 +1,205 @@
--- =============================================================
--- Banking Data Analytics Project
--- File Name   : 10_performance_optimization.sql
--- Project     : End-to-End Banking Data Analytics using PostgreSQL
--- Author      : Faisal Kader
--- Database    : PostgreSQL
+
+-- ============================================================
+-- BANKING DATA ANALYTICS PROJECT
+-- File: 10_performance_optimization.sql
+-- Author: Faisal Kader
+-- Database: banking_analytics
 --
--- Description:
--- This script demonstrates query performance analysis using
--- PostgreSQL's EXPLAIN ANALYZE command.
+-- Purpose:
+-- Evaluate PostgreSQL query execution performance.
 --
--- Objective:
--- Evaluate whether the indexes created in 09_indexes.sql
--- are being utilized effectively.
--- =============================================================
+-- Source table: banking_transactions_clean_v2
+-- Verified records: 24,998
+--
+-- Techniques:
+-- EXPLAIN ANALYZE
+-- Buffer utilization analysis
+-- Index and sequential scan inspection
+-- Aggregation and sorting analysis
+--
+-- IMPORTANT:
+-- These tests inspect performance. They do not prove
+-- optimization unless benchmark comparisons are made.
+-- ============================================================
 
 
--- =============================================================
--- TEST 1 : Search by Client ID
--- =============================================================
+-- ============================================================
+-- TEST 1: CUSTOMER LOOKUP
+-- ============================================================
 
-EXPLAIN ANALYZE
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+    client_id,
+    client_name,
+    bank_name,
+    account_type
+FROM banking_transactions_clean_v2
+WHERE client_id = '70435';
 
+
+-- ============================================================
+-- TEST 2: BANK NAME FILTER
+-- ============================================================
+
+EXPLAIN (ANALYZE, BUFFERS)
 SELECT *
-
-FROM banking_transactions
-
-WHERE client_id = 70435;
-
-
-
--- =============================================================
--- TEST 2 : Search by Bank Name
--- =============================================================
-
-EXPLAIN ANALYZE
-
-SELECT *
-
-FROM banking_transactions
-
+FROM banking_transactions_clean_v2
 WHERE bank_name = 'HSBC';
 
 
+-- ============================================================
+-- TEST 3: BANK AND CURRENCY FILTER
+-- ============================================================
 
--- =============================================================
--- TEST 3 : Filter High Risk Customers
--- =============================================================
-
-EXPLAIN ANALYZE
-
-SELECT *
-
-FROM banking_transactions
-
-WHERE risk_category = 'High';
-
-
-
--- =============================================================
--- TEST 4 : Filter Expired Accounts
--- =============================================================
-
-EXPLAIN ANALYZE
-
-SELECT *
-
-FROM banking_transactions
-
-WHERE maturity_status = 'Expired';
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+    bank_name,
+    currency,
+    transaction_amount
+FROM banking_transactions_clean_v2
+WHERE bank_name = 'CHASE'
+  AND currency = 'USD';
 
 
+-- ============================================================
+-- TEST 4: MATURITY DATE RANGE
+-- ============================================================
 
--- =============================================================
--- TEST 5 : Find Approved Loans
--- =============================================================
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+    client_id,
+    bank_name,
+    maturity_date
+FROM banking_transactions_clean_v2
+WHERE maturity_date >= DATE '2025-01-01'
+  AND maturity_date < DATE '2026-01-01';
 
-EXPLAIN ANALYZE
 
-SELECT *
+-- ============================================================
+-- TEST 5: APPROVED LOANS
+-- ============================================================
 
-FROM banking_transactions
-
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+    client_id,
+    bank_name,
+    loan_status,
+    transaction_amount
+FROM banking_transactions_clean_v2
 WHERE loan_status = 'Approved';
 
 
+-- ============================================================
+-- TEST 6: TOP 10 TRANSACTION AMOUNTS
+-- ============================================================
 
--- =============================================================
--- TEST 6 : Top 10 Highest Transactions
--- =============================================================
+-- Includes currency to prevent misleading
+-- single-currency interpretations.
 
-EXPLAIN ANALYZE
-
+EXPLAIN (ANALYZE, BUFFERS)
 SELECT
-
-client_id,
-client_name,
-transaction_amount
-
-FROM banking_transactions
-
+    client_id,
+    client_name,
+    bank_name,
+    currency,
+    transaction_amount
+FROM banking_transactions_clean_v2
+WHERE transaction_amount IS NOT NULL
 ORDER BY transaction_amount DESC
-
 LIMIT 10;
 
 
+-- ============================================================
+-- TEST 7: BANK PERFORMANCE AGGREGATION
+-- ============================================================
 
--- =============================================================
--- TEST 7 : Total Transaction Amount by Bank
--- =============================================================
-
-EXPLAIN ANALYZE
-
+EXPLAIN (ANALYZE, BUFFERS)
 SELECT
+    bank_name,
+    COUNT(*) AS total_records,
+    ROUND(SUM(transaction_amount), 2)
+        AS sum_of_recorded_amounts
+FROM banking_transactions_clean_v2
+WHERE transaction_amount IS NOT NULL
+GROUP BY bank_name
+ORDER BY sum_of_recorded_amounts DESC;
 
-bank_name,
 
-SUM(transaction_amount)
+-- ============================================================
+-- TEST 8: AVERAGE INTEREST RATE BY BANK
+-- ============================================================
 
-FROM banking_transactions
-
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+    bank_name,
+    COUNT(interest_rate) AS valid_rates,
+    ROUND(AVG(interest_rate), 2)
+        AS average_interest_rate
+FROM banking_transactions_clean_v2
 GROUP BY bank_name;
 
 
+-- ============================================================
+-- TEST 9: MONTHLY MATURITY ANALYSIS
+-- ============================================================
 
--- =============================================================
--- TEST 8 : Average Interest Rate by Bank
--- =============================================================
-
-EXPLAIN ANALYZE
-
+EXPLAIN (ANALYZE, BUFFERS)
 SELECT
-
-bank_name,
-
-ROUND(AVG(interest_rate),2)
-
-FROM banking_transactions
-
-GROUP BY bank_name;
-
-
-
--- =============================================================
--- TEST 9 : Monthly Trend Analysis
--- =============================================================
-
-EXPLAIN ANALYZE
-
-SELECT
-
-EXTRACT(YEAR FROM maturity_date) AS year,
-
-EXTRACT(MONTH FROM maturity_date) AS month,
-
-COUNT(*)
-
-FROM banking_transactions
-
+    DATE_TRUNC('month', maturity_date)::DATE
+        AS maturity_month,
+    COUNT(*) AS total_records
+FROM banking_transactions_clean_v2
 WHERE maturity_date IS NOT NULL
-
-GROUP BY year, month
-
-ORDER BY year, month;
+GROUP BY DATE_TRUNC('month', maturity_date)
+ORDER BY maturity_month;
 
 
+-- ============================================================
+-- TEST 10: EXECUTIVE KPI AGGREGATION
+-- ============================================================
 
--- =============================================================
--- TEST 10 : Executive KPI Query
--- =============================================================
-
-EXPLAIN ANALYZE
-
+EXPLAIN (ANALYZE, BUFFERS)
 SELECT
-
-COUNT(*) AS total_records,
-
-SUM(transaction_amount),
-
-AVG(transaction_amount),
-
-MAX(transaction_amount),
-
-MIN(transaction_amount)
-
-FROM banking_transactions;
-
+    COUNT(*) AS total_records,
+    COUNT(DISTINCT NULLIF(TRIM(client_id), ''))
+        AS unique_clients,
+    COUNT(transaction_amount) AS valid_amounts,
+    ROUND(SUM(transaction_amount), 2)
+        AS sum_of_recorded_amounts,
+    ROUND(AVG(transaction_amount), 2)
+        AS average_recorded_amount,
+    ROUND(AVG(interest_rate), 2)
+        AS average_interest_rate
+FROM banking_transactions_clean_v2;
 
 
--- =============================================================
--- END OF FILE
--- =============================================================
+-- ============================================================
+-- NOTES
+-- ============================================================
+
+-- PostgreSQL may choose:
+-- Sequential Scan
+-- Index Scan
+-- Bitmap Index Scan
+-- HashAggregate
+-- GroupAggregate
+-- Sort
+--
+-- The execution plan depends on available indexes,
+-- database statistics, query selectivity and table size.
+--
+-- EXPLAIN (ANALYZE, BUFFERS) reports actual execution
+-- timings and buffer activity.
+--
+-- To establish a verified speed improvement:
+-- 1. Run repeated baseline measurements.
+-- 2. Apply an appropriate index or query change.
+-- 3. Repeat measurements under comparable conditions.
+-- 4. Compare execution time and buffer usage.
+--
+-- Do not claim faster performance solely because
+-- an index was created.
+--
+-- Financial amounts contain multiple currencies.
+-- Cross-currency sums are not converted monetary totals.
+-- ============================================================
